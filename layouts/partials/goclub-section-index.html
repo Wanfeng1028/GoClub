@@ -50,7 +50,7 @@
                   {{ end }}
                 </span>
                 <span class="section-link-list-meta">{{ len (where $item.Pages "Params.bookHidden" "ne" true) }} 页</span>
-                <span class="section-link-list-arrow" aria-hidden="true">→</span>
+                <span class="section-link-list-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-right") }}</span>
               </a>
             </li>
           {{ end }}
@@ -74,7 +74,7 @@
                 <span class="section-link-list-copy">
                   <span class="section-link-list-title">{{ partial "docs/title" $item }}</span>
                 </span>
-                <span class="section-link-list-arrow" aria-hidden="true">→</span>
+                <span class="section-link-list-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-right") }}</span>
               </a>
             </li>
           {{ end }}

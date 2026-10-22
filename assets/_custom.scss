@@ -207,6 +207,17 @@ body:has(.goclub-topbar) { padding-top: var(--gc-topbar-h); }
 .theme-toggle:hover { background: var(--gc-hover); color: var(--gc-text); }
 .theme-icon { width: 18px; height: 18px; }
 
+/* Lucide 图标统一规则（原件 assets/icons/lucide/，stroke=currentColor 自适应明暗）：
+   尺寸只在此处与各上下文类里定，模板不写死像素。顶栏/主题/搜索 18px，菜单内 img 图标走主题 .book-icon，正文箭头 16px。 */
+.lucide-icon { display: inline-block; vertical-align: middle; flex: 0 0 auto; }
+.sidebar-toggle-icon { display: inline-flex; }
+.sidebar-toggle-icon svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
+body.sidebar-collapsed .sidebar-toggle-icon svg { transform: rotate(180deg); }
+.home-card-arrow, .section-link-list-arrow, .goclub-prev-next-arrow { display: inline-flex; align-items: center; }
+.home-card-arrow svg, .section-link-list-arrow svg { width: 16px; height: 16px; }
+.goclub-prev-next-arrow svg { width: 18px; height: 18px; }
+.book-search-close svg { width: 18px; height: 18px; }
+
 /* ============ 4. 侧边栏 ============ */
 .book-menu {
   position: relative;
@@ -649,7 +660,6 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
 .goclub-share.is-done { border-color: var(--gc-accent); color: var(--gc-accent); }
 .goclub-share.is-error { border-color: #d84747; color: #c03636; }
 .goclub-share-icon svg { width: 14px; height: 14px; display: block; }
-.goclub-share-icon svg rect, .goclub-share-icon svg path { stroke: currentColor; stroke-width: 1.4; }
 .goclub-share-url { color: var(--gc-text-3); font-size: 12px; }
 
 /* ============ 9. 首页 ============ */

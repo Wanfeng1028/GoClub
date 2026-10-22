@@ -38,7 +38,7 @@
     <nav class="goclub-prev-next" aria-label="相邻文章">
       {{ with $prev }}
         <a href="{{ .RelPermalink }}" rel="prev" class="goclub-prev-next-link goclub-prev-next-link--prev">
-          <span class="goclub-prev-next-arrow" aria-hidden="true">←</span>
+          <span class="goclub-prev-next-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-left") }}</span>
           <span class="goclub-prev-next-copy">
             <span class="goclub-prev-next-eyebrow">上一篇</span>
             <span class="goclub-prev-next-title">{{ partial "docs/title" . }}</span>
@@ -51,7 +51,7 @@
             <span class="goclub-prev-next-eyebrow">下一篇</span>
             <span class="goclub-prev-next-title">{{ partial "docs/title" . }}</span>
           </span>
-          <span class="goclub-prev-next-arrow" aria-hidden="true">→</span>
+          <span class="goclub-prev-next-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-right") }}</span>
         </a>
       {{ end }}
     </nav>

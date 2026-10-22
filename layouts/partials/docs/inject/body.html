@@ -47,13 +47,9 @@
       body.classList.toggle("sidebar-collapsed", collapsed);
 
       if (menuToggle) {
-        var icon = menuToggle.querySelector(".sidebar-toggle-icon");
         menuToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
         menuToggle.setAttribute("aria-label", collapsed ? "展开侧边栏" : "收起侧边栏");
-
-        if (icon) {
-          icon.textContent = collapsed ? "›" : "‹";
-        }
+        // 折叠箭头是内联 Lucide chevron-left，方向由 CSS 按 body.sidebar-collapsed 旋转，不再改文本。
       }
     }
 
