@@ -12,7 +12,7 @@
     var tocControl = document.getElementById("toc-control");
     var menuControlLabel = document.querySelector('label[for="menu-control"].goclub-mobile-header-button');
     var tocControlLabel = document.querySelector('label[for="toc-control"].goclub-mobile-header-button');
-    var minWidth = 272;
+    var minWidth = 240;
     var maxWidth = 520;
     var measuredDefaultWidth = menu ? menu.getBoundingClientRect().width : 0;
     var defaultWidth = measuredDefaultWidth > 0 ? measuredDefaultWidth : 288;
@@ -188,6 +188,29 @@
       };
       el.addEventListener('toggle', update);
       update();
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    // 顶栏与首页的搜索入口：聚焦侧边栏内的搜索输入框，
+    // search.js 会在 focus/click 时把搜索面板展开为浮层。
+    var triggers = document.querySelectorAll('.goclub-search-trigger');
+    if (!triggers.length) return;
+    var input = document.getElementById('book-search-input');
+    if (!input) return;
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        if (window.matchMedia('(max-width: 56rem)').matches) {
+          var menuControl = document.getElementById('menu-control');
+          if (menuControl && !menuControl.checked) {
+            menuControl.checked = true;
+          }
+        }
+        input.focus();
+        input.click();
+      });
     });
   })();
 </script>

@@ -20,7 +20,7 @@ enableGitInfo = true
   BookToC = true
   BookSection = 'docs'
   BookSearch = true
-  BookRepo = 'https://github.com/LeoninCS/GoClub'
+  BookRepo = 'https://github.com/Wanfeng1028/GoClub'
 
 [security]
   allowContent = ['^text/html$', '^text/markdown$']

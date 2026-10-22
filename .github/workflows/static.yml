@@ -46,7 +46,7 @@ jobs:
         run: python3 scripts/generate_contributors.py
 
       - name: Build
-        run: hugo --minify
+        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Check search index coverage
         run: python3 scripts/check_search_index.py --site public

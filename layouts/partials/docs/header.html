@@ -1,17 +1,1 @@
-<div class="goclub-mobile-header">
-  <label for="menu-control" class="goclub-mobile-header-button goclub-mobile-menu-button" aria-label="打开导航">
-    <svg class="goclub-mobile-header-icon goclub-mobile-menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M5 7h14M5 12h10M5 17h14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" />
-      <circle cx="18" cy="12" r="1.35" fill="currentColor" />
-    </svg>
-  </label>
-
-  <div class="goclub-mobile-header-copy">
-    <div class="goclub-mobile-header-label">GoClub 知识库</div>
-    <h3>{{ partial "docs/title" . }}</h3>
-  </div>
-
-  <label for="toc-control" class="goclub-mobile-header-button {{ if not (partial "docs/toc-show" .) }}is-hidden{{ end }}" aria-label="打开目录">
-    <span class="goclub-mobile-header-button-label" aria-hidden="true">本页</span>
-  </label>
-</div>
+{{/* 移动端顶栏已并入 goclub/topbar；此 partial 保留为空以兼容 baseof 的 header 模板。 */}}

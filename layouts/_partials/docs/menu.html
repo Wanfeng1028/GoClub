@@ -1,12 +1,11 @@
 <nav aria-label="主导航">
-  {{ partial "docs/brand" . }}
   {{ partial "docs/search" . }}
   {{ if hugo.IsMultilingual }}
     {{ partial "docs/languages" . }}
   {{ end }}
 
   <div class="goclub-menu-directory">
-    <div class="goclub-menu-caption">浏览目录</div>
+    <div class="goclub-menu-caption">目录</div>
     {{ partial "docs/inject/menu-before" . }}
     {{ partial "docs/menu-hugo" (dict "Page" .Page "Menu" .Site.Menus.before) }}
 

@@ -1,0 +1,55 @@
+{{/* 站点顶栏：品牌 / 搜索入口 / GitHub / 主题切换。JS 依赖：label[for=menu-control].goclub-mobile-header-button、label[for=toc-control].goclub-mobile-header-button、#theme-toggle/#sun-icon/#moon-icon、.goclub-search-trigger */}}
+<header class="goclub-topbar">
+  <div class="goclub-topbar-inner">
+    <label for="menu-control" class="goclub-mobile-header-button goclub-topbar-btn goclub-topbar-menu-btn" aria-label="打开导航">
+      <svg class="goclub-topbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+    </label>
+
+    {{ partial "docs/brand" . }}
+
+    <div class="goclub-topbar-spacer"></div>
+
+    <button type="button" class="goclub-search-trigger goclub-topbar-search" aria-label="搜索知识库">
+      <svg class="goclub-topbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+      </svg>
+      <span class="goclub-topbar-search-text">搜索知识库</span>
+      <kbd class="goclub-topbar-kbd">S</kbd>
+    </button>
+
+    <a class="goclub-topbar-github" href="https://github.com/Wanfeng1028/GoClub" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库">
+      <svg class="goclub-topbar-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 1.28.57.94.72 1.9 0 1.37-.01 1.11 0 2.25 0 .54.26 1.17.8.55C20.71 21.39 24 17.08 24 12c0-6.35-5.15-11.5-12-11.5Z"/>
+      </svg>
+      <span class="goclub-topbar-github-text">GitHub</span>
+    </a>
+
+    {{ if partial "docs/toc-show" . }}
+    <label for="toc-control" class="goclub-mobile-header-button goclub-topbar-btn goclub-topbar-toc-btn" aria-label="打开目录">
+      <span class="goclub-mobile-header-button-label" aria-hidden="true">本页</span>
+    </label>
+    {{ end }}
+
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+      <svg id="sun-icon" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg id="moon-icon" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+</header>
