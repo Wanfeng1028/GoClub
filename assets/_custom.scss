@@ -215,12 +215,10 @@ main.container {
 .book-brand-logo { display: block; width: 30px; height: 30px; flex: 0 0 auto; }
 /* VP 顶栏为单行站名（16px/600），无副标题行 */
 .book-brand-name { font-size: 16px; font-weight: 600; color: var(--vp-text-1); white-space: nowrap; }
-/* 候选 1 为品牌蓝单色字形：深色顶栏下提亮，避免蓝贴近黑底看不清（占位期处理） */
-:root[data-theme="dark"] .book-brand-logo,
-:root[data-theme="dark"] .home-hero-logo { filter: brightness(1.55) saturate(1.05); }
+/* 品牌标为品牌蓝单色字形：深色顶栏下提亮，避免蓝贴近黑底看不清 */
+:root[data-theme="dark"] .book-brand-logo { filter: brightness(1.55) saturate(1.05); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .book-brand-logo,
-  :root:not([data-theme="light"]) .home-hero-logo { filter: brightness(1.55) saturate(1.05); }
+  :root:not([data-theme="light"]) .book-brand-logo { filter: brightness(1.55) saturate(1.05); }
 }
 .goclub-topbar-spacer { flex: 1 1 auto; }
 .goclub-topbar a { flex: none; }
@@ -941,189 +939,195 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .goclub-share-icon svg { width: 14px; height: 14px; display: block; }
 .goclub-share-url { color: var(--vp-text-3); font-size: 12px; }
 
-/* ============ 9. 首页（VPHero + VPFeatures 规格） ============ */
-/* VPHero（has-image 形态）: padding calc(nav+48) 24 48 → ≥640: calc(nav+80) 48 64；本站顶栏已占位，故用 48 / 80。
-   左文右图（≥960 横排）；本轮按 vitejs.cn 首页 1:1 口径：name 用 Vite 同款渐变大字，
-   右侧大 logo 背后带一团品牌蓝紫系柔光晕（覆盖上一轮「无渐变/无光晕」的处理）。 */
+/* ============ 9. 首页（文档门户风：居中 hero + 大搜索框 + 数据带 + 栏目索引行） ============ */
+/* 第五轮口径：删渐变大字/彩色光晕/悬浮大 logo，回归与内页一致的 VP 色板与细线体系，排版即设计。 */
 .home-hero {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  padding: 48px 0 64px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 72px 0 56px;
+  text-align: center;
 }
 @media screen and (min-width: 40rem) {
-  .home-hero { padding-top: 80px; }
+  .home-hero { padding-top: 104px; }
 }
-@media screen and (min-width: 60rem) {
-  .home-hero {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 64px;
-  }
-  .home-hero-main { flex: 1 1 auto; min-width: 0; max-width: 640px; }
-}
-.home-hero-image {
-  order: -1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-@media screen and (min-width: 60rem) {
-  .home-hero-image { order: 0; flex: 0 0 auto; }
-}
-/* logo 背后的柔光晕：品牌蓝紫系多团 radial 光斑 + 大 blur（照 Vite 首页 hero 图区） */
-.home-hero-glow {
-  position: absolute;
-  inset: 6% 2%;
-  z-index: 0;
-  background:
-    radial-gradient(circle at 32% 30%, rgba(100, 108, 255, 0.55), transparent 62%),
-    radial-gradient(circle at 72% 68%, rgba(189, 52, 254, 0.42), transparent 62%),
-    radial-gradient(circle at 66% 22%, rgba(65, 209, 255, 0.38), transparent 55%);
-  filter: blur(52px);
-  pointer-events: none;
-}
-.home-hero-logo { position: relative; z-index: 1; display: block; width: 168px; height: 168px; }
-@media screen and (min-width: 40rem) {
-  .home-hero-logo { width: 240px; height: 240px; }
-}
-@media screen and (min-width: 60rem) {
-  .home-hero-logo { width: 320px; height: 320px; }
-}
-.home-hero .home-hero-name {
+.home-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-  line-height: 40px;
-  /* Vite 首页同款渐变大字（紫→青） */
-  background: linear-gradient(120deg, #bd34fe 20%, #41d1ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--vp-text-3);
 }
-.home-hero .home-hero-text {
-  margin: 0;
-  max-width: 392px;
-  font-size: 32px;
+.home-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vp-brand-1);
+}
+.home-hero .home-title {
+  margin: 20px 0 0;
+  font-size: 36px;
   font-weight: 700;
-  letter-spacing: -0.4px;
-  line-height: 40px;
+  letter-spacing: -0.02em;
+  line-height: 44px;
   color: var(--vp-text-1);
 }
-.home-hero .home-hero-tagline {
-  margin: 0;
-  max-width: 392px;
-  padding-top: 8px;
-  font-size: 18px;
+@media screen and (min-width: 40rem) {
+  .home-hero .home-title { font-size: 48px; line-height: 56px; }
+}
+.home-hero .home-tagline {
+  margin: 16px auto 0;
+  max-width: 660px;
+  font-size: 17px;
   font-weight: 500;
   line-height: 28px;
   color: var(--vp-text-2);
 }
-/* tagline 前的小徽标胶囊（VP 首页的版本徽标位，本站写真实短标） */
-.home-hero-badge {
-  display: inline-block;
-  margin-right: 8px;
-  padding: 1px 10px;
-  border: 1px solid var(--vp-divider);
-  border-radius: 999px;
-  background: var(--vp-bg-soft);
-  color: var(--vp-text-2);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 22px;
-  vertical-align: 2px;
-  white-space: nowrap;
-}
-@media screen and (min-width: 40rem) {
-  .home-hero .home-hero-name { font-size: 48px; line-height: 56px; }
-  .home-hero .home-hero-text { max-width: 576px; font-size: 48px; line-height: 56px; }
-  .home-hero .home-hero-tagline { max-width: 576px; padding-top: 12px; font-size: 20px; line-height: 32px; }
-}
-@media screen and (min-width: 60rem) {
-  .home-hero .home-hero-name { font-size: 56px; line-height: 64px; }
-  .home-hero .home-hero-text { font-size: 56px; line-height: 64px; }
-}
-.home-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 12px;
-  padding-top: 24px;
-}
-@media screen and (min-width: 40rem) {
-  .home-actions { padding-top: 32px; }
-}
-/* VPButton.medium: radius 20px、padding 0 20px、line-height 38px、14px/500；主钮实心、次钮描边+soft 底 */
-.markdown a.home-btn {
-  flex: 0 0 auto;
-  display: inline-block;
-  padding: 0 20px;
-  border: 1px solid var(--vp-divider);
-  border-radius: 20px;
-  background: var(--vp-bg-soft);
-  color: var(--vp-text-1);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 38px;
-  white-space: nowrap;
-  text-decoration: none;
-}
-.markdown a.home-btn:hover { background: var(--vp-bg-soft-hover); color: var(--vp-text-1); text-decoration: none; }
-.markdown a.home-btn-primary { border-color: transparent; background: var(--vp-btn-bg); color: #fff; }
-.markdown a.home-btn-primary:hover { background: var(--vp-btn-hover); color: #fff; }
-
-/* VPFeatures: 卡片 bg-soft、radius 12、padding 24；图标盒 48px/radius 6 */
-.home-grid { display: grid; grid-template-columns: 1fr; gap: 16px; padding-bottom: 64px; }
-@media screen and (min-width: 40rem) {
-  .home-grid { grid-template-columns: 1fr 1fr; }
-}
-@media screen and (min-width: 64rem) {
-  .home-grid { grid-template-columns: repeat(3, 1fr); }
-}
-.markdown a.home-card {
-  display: block;
-  height: 100%;
-  padding: 24px;
-  border: 1px solid var(--vp-bg-soft);
-  border-radius: 12px;
-  background: var(--vp-bg-soft);
-  color: var(--vp-text-1);
-  text-decoration: none;
-}
-:root[data-theme="dark"] .markdown a.home-card { border-color: var(--vp-bg-soft); }
-.markdown a.home-card:hover { text-decoration: none; }
-.home-card-icon {
+/* 首页大搜索框：复用 .goclub-search-trigger 唤起既有搜索浮层；soft 底、圆角 8、非胶囊描边 */
+.home-search {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 48px;
+  gap: 10px;
+  width: 560px;
+  max-width: 100%;
   height: 48px;
-  margin-bottom: 20px;
-  border-radius: 6px;
+  margin: 36px auto 0;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-3);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.home-search:hover { background: var(--vp-bg-soft-hover); border-color: var(--vp-divider); }
+.home-search-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+.home-search-text { flex: 1 1 auto; text-align: left; }
+.home-search-kbd {
+  flex: 0 0 auto;
+  padding: 1px 7px;
+  border: 1px solid var(--vp-divider);
+  border-radius: 4px;
   background: var(--vp-bg);
+  color: var(--vp-text-3);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 18px;
+}
+/* hero 与共建区的文字链按钮：无底无框，hover 品牌色 + 下划线 */
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 28px;
+  margin-top: 24px;
+}
+.markdown a.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--vp-text-2);
+  text-decoration: none;
+}
+.markdown a.home-link:hover { color: var(--vp-brand-1); text-decoration: underline; text-underline-offset: 4px; }
+.markdown a.home-link-primary { color: var(--vp-brand-1); }
+.home-link-icon { width: 15px; height: 15px; }
+
+/* 数据带：细线上下分隔，数字由模板实时计数 */
+.home-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 64px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 22px 0;
+  border-top: 1px solid var(--vp-divider);
+  border-bottom: 1px solid var(--vp-divider);
+}
+.home-stat { display: inline-flex; align-items: baseline; gap: 8px; }
+.home-stat-value { font-size: 20px; font-weight: 600; color: var(--vp-text-1); font-variant-numeric: tabular-nums; }
+.home-stat-label { font-size: 13px; color: var(--vp-text-3); }
+
+/* 栏目索引：两列索引行，细线分隔，hover 行变 soft 底 */
+.home-index { max-width: 1080px; margin: 0 auto; padding-top: 56px; }
+.home-index-heading {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--vp-text-3);
+}
+.home-index-grid { display: grid; grid-template-columns: 1fr; }
+@media screen and (min-width: 64rem) {
+  .home-index-grid { grid-template-columns: 1fr 1fr; column-gap: 48px; }
+}
+.markdown a.home-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 10px;
+  border-top: 1px solid var(--vp-divider);
   color: var(--vp-text-1);
-  font-size: 24px;
+  text-decoration: none;
+  transition: background 0.15s;
 }
-:root[data-theme="dark"] .home-card-icon { background: #2e2e32; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .home-card-icon { background: #2e2e32; }
+.home-index-grid > a.home-row:last-child { border-bottom: 1px solid var(--vp-divider); }
+@media screen and (min-width: 64rem) {
+  .home-index-grid > a.home-row:nth-last-child(2) { border-bottom: 1px solid var(--vp-divider); }
 }
-.home-card-icon svg { width: 24px; height: 24px; }
-.home-card-title { display: block; font-size: 16px; font-weight: 600; line-height: 24px; color: var(--vp-text-1); }
-.home-card-summary {
+.markdown a.home-row:hover { background: var(--vp-bg-soft); text-decoration: none; }
+.home-row-num {
+  flex: 0 0 auto;
+  width: 26px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vp-text-3);
+  font-variant-numeric: tabular-nums;
+}
+.home-row-icon { flex: 0 0 auto; display: flex; color: var(--vp-text-2); }
+.home-row-icon svg { width: 20px; height: 20px; }
+.markdown a.home-row:hover .home-row-icon { color: var(--vp-brand-1); }
+.home-row-copy { flex: 1 1 auto; min-width: 0; }
+.home-row-title { display: block; font-size: 16px; font-weight: 600; line-height: 24px; color: var(--vp-text-1); }
+.markdown a.home-row:hover .home-row-title { color: var(--vp-brand-1); }
+.home-row-summary {
   display: -webkit-box;
   overflow: hidden;
-  padding-top: 8px;
+  margin-top: 2px;
   font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 22px;
   color: var(--vp-text-2);
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
 }
+.home-row-count {
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: var(--vp-text-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.home-row-arrow { flex: 0 0 auto; display: flex; color: var(--vp-text-3); transition: transform 0.15s, color 0.15s; }
+.home-row-arrow svg { width: 16px; height: 16px; }
+.markdown a.home-row:hover .home-row-arrow { color: var(--vp-brand-1); transform: translateX(3px); }
+
+/* 参与共建：细线分隔的一行引导 + 文字链 */
+.home-join {
+  max-width: 1080px;
+  margin: 64px auto 0;
+  padding-top: 40px;
+  border-top: 1px solid var(--vp-divider);
+  text-align: center;
+}
+.home-join-text { margin: 0 auto; max-width: 560px; font-size: 15px; line-height: 26px; color: var(--vp-text-2); }
+.home-join .home-links { margin-top: 16px; }
 
 /* ============ 10. 栏目索引（VP 正文式：无自创索引大标题，前言后直接是带摘要的链接列表） ============ */
 .section-index-shell { margin-top: 8px; }
