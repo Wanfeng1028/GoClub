@@ -14,13 +14,9 @@
 
   <article class="markdown book-article home-article">
     <section class="home-hero">
-      <h1 class="home-title">Go 面试知识库</h1>
-      <p class="home-subtitle">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。面经可以先用 AI 整理，再通过 Issue 表单投稿；其他内容和纠错也欢迎提 PR。</p>
-      <button type="button" class="goclub-search-trigger home-search" aria-label="搜索知识库">
-        {{ partial "goclub/icon" (dict "name" "search" "class" "home-search-icon") }}
-        <span class="home-search-text">搜索面试题、八股、资料…</span>
-        <kbd class="home-search-kbd">S</kbd>
-      </button>
+      <h1 class="home-hero-name">GoClub</h1>
+      <p class="home-hero-text">Go 面试知识库</p>
+      <p class="home-hero-tagline">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。面经可以先用 AI 整理，再通过 Issue 表单投稿；其他内容和纠错也欢迎提 PR。</p>
       <nav class="home-actions" aria-label="快速操作">
         {{ with $submitPage }}
           <a class="home-btn home-btn-primary" href="{{ .RelPermalink }}">面经投稿流程</a>
@@ -30,11 +26,7 @@
       </nav>
     </section>
 
-    <section class="home-sections" aria-labelledby="home-directory-title">
-      <header class="home-sections-heading">
-        <h2 id="home-directory-title">全部栏目</h2>
-        <span class="home-sections-count">{{ len $sections }} 个栏目</span>
-      </header>
+    <section class="home-sections" aria-label="全部栏目">
       <div class="home-grid">
         {{ range $item := $sections }}
           {{ $summary := partial "goclub/lead-summary.html" . }}
@@ -57,7 +49,7 @@
             {{ with $summary }}
               <span class="home-card-summary">{{ . }}</span>
             {{ end }}
-            <span class="home-card-meta">{{ len $children }} 页<span class="home-card-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-right") }}</span></span>
+            <span class="home-card-meta">{{ len $children }} 页</span>
           </a>
         {{ end }}
       </div>

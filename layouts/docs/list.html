@@ -7,14 +7,6 @@
   {{ $visiblePages := where .Pages "Params.bookHidden" "ne" true }}
   <article class="markdown book-article">
     <header class="page-lead page-lead--section">
-      <div class="page-lead-overline">
-        <span>{{ if $isContributors }}社区名录{{ else }}内容栏目{{ end }}</span>
-        {{ with .Parent }}
-          {{ if ne .Kind "home" }}
-            <a href="{{ .RelPermalink }}">{{ partial "docs/title" . }}</a>
-          {{ end }}
-        {{ end }}
-      </div>
       <div class="page-lead-layout">
         <h1 class="page-lead-title">{{ partial "docs/title" . }}</h1>
         <div class="page-lead-aside">
@@ -32,8 +24,6 @@
             {{ end }}
             {{ if $isContributors }}
               <span class="page-lead-meta-item" role="listitem">{{ len $contributors }} 位贡献者</span>
-            {{ else }}
-              <span class="page-lead-meta-item" role="listitem">{{ len $visiblePages }} 项内容</span>
             {{ end }}
           </div>
         </div>

@@ -5,14 +5,6 @@
 
   <article class="markdown book-article book-article--single{{ if $hasToc }} has-page-toc{{ end }}{{ if .Params.preserveWhitespace }} preserve-whitespace{{ end }}">
     <header class="page-lead page-lead--article">
-      <div class="page-lead-overline">
-        <span>文章</span>
-        {{ with .CurrentSection }}
-          {{ if ne .RelPermalink $.RelPermalink }}
-            <a href="{{ .RelPermalink }}">{{ partial "docs/title" . }}</a>
-          {{ end }}
-        {{ end }}
-      </div>
       <h1 class="page-lead-title">{{ partial "docs/title" . }}</h1>
       {{ with $summary }}
         <div class="page-lead-summary">{{ . }}</div>
