@@ -1169,7 +1169,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   border-top: 1px solid var(--vp-divider);
   text-align: center;
 }
-.home-join-text { margin: 0 auto; text-wrap: balance; max-width: 560px; font-size: 15px; line-height: 26px; color: var(--vp-text-2); }
+.home-join .home-join-text { margin-left: auto; margin-right: auto; text-align: center; text-wrap: balance; max-width: 560px; font-size: 15px; line-height: 26px; color: var(--vp-text-2); }
 .home-join .home-links { margin-top: 16px; }
 
 /* 项目声明：首页底部常驻小字（与欢迎弹窗同文），细线分隔、居中、两行内 */
