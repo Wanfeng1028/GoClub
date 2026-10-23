@@ -981,11 +981,13 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   background: var(--gemini-gradient);
 }
 /* 大字标：气泡 logo + Fredoka 600（BotsRouter 同款品牌艺术字）；行高预留，字体未加载时 fallback 栈兜底 */
+/* 大字标锁合：图片 logo 在上、文字在下，全部居中（用户 2026-10-24 亲定；横排在窄屏会溢出裁切） */
 .home-wordmark {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.18em;
+  gap: 0.22em;
   margin: 18px 0 0;
   font-family: "Fredoka", "PingFang SC", "Hiragino Sans GB", sans-serif;
   font-size: clamp(72px, 11vw, 120px);
