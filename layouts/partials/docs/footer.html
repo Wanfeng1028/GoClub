@@ -38,20 +38,14 @@
     <nav class="goclub-prev-next" aria-label="相邻文章">
       {{ with $prev }}
         <a href="{{ .RelPermalink }}" rel="prev" class="goclub-prev-next-link goclub-prev-next-link--prev">
-          <span class="goclub-prev-next-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-left") }}</span>
-          <span class="goclub-prev-next-copy">
-            <span class="goclub-prev-next-eyebrow">上一篇</span>
-            <span class="goclub-prev-next-title">{{ partial "docs/title" . }}</span>
-          </span>
+          <span class="goclub-prev-next-eyebrow">{{ partial "goclub/icon" (dict "name" "arrow-left" "class" "goclub-prev-next-eyebrow-icon") }}上一篇</span>
+          <span class="goclub-prev-next-title">{{ partial "docs/title" . }}</span>
         </a>
       {{ end }}
       {{ with $next }}
         <a href="{{ .RelPermalink }}" rel="next" class="goclub-prev-next-link goclub-prev-next-link--next">
-          <span class="goclub-prev-next-copy">
-            <span class="goclub-prev-next-eyebrow">下一篇</span>
-            <span class="goclub-prev-next-title">{{ partial "docs/title" . }}</span>
-          </span>
-          <span class="goclub-prev-next-arrow" aria-hidden="true">{{ partial "goclub/icon" (dict "name" "arrow-right") }}</span>
+          <span class="goclub-prev-next-eyebrow">下一篇{{ partial "goclub/icon" (dict "name" "arrow-right" "class" "goclub-prev-next-eyebrow-icon") }}</span>
+          <span class="goclub-prev-next-title">{{ partial "docs/title" . }}</span>
         </a>
       {{ end }}
     </nav>

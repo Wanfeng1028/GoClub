@@ -15,6 +15,11 @@
          数据全部由模板在构建时从 content 实时计数，不写死。 */}}
     <section class="home-hero">
       <p class="home-eyebrow"><span class="home-eyebrow-dot" aria-hidden="true"></span>社区共建 · 开源免费</p>
+      {{/* 大字标：定稿气泡 logo + Fredoka 600 艺术字（BotsRouter 同款品牌字），logo URL 带内容哈希防缓存 */}}
+      <p class="home-wordmark" aria-label="GoClub">
+        <img class="home-wordmark-logo" src="{{ printf "%s?v=%s" ("logo.svg" | relURL) (substr (sha256 (readFile "static/logo.svg")) 0 12) }}" alt="" aria-hidden="true">
+        <span class="home-wordmark-text" aria-hidden="true">GoClub</span>
+      </p>
       <h1 class="home-title">Go 后端面试知识库</h1>
       <p class="home-tagline">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。</p>
       <button type="button" class="goclub-search-trigger home-search" aria-label="搜索知识库">
