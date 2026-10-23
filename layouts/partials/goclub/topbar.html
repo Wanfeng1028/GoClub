@@ -1,4 +1,5 @@
-{{/* 站点顶栏：品牌 / 搜索入口 / GitHub / 主题切换。JS 依赖：label[for=menu-control].goclub-mobile-header-button、label[for=toc-control].goclub-mobile-header-button、#theme-toggle/#sun-icon/#moon-icon、.goclub-search-trigger */}}
+{{/* 站点顶栏（VPNav 顺序）：品牌 / 搜索框 / 菜单行（含「更多」下拉）/ 分隔线 / 外观开关 / 分隔线 / 社交图标。
+     JS 依赖：label[for=menu-control].goclub-mobile-header-button、label[for=toc-control].goclub-mobile-header-button、#theme-toggle/#sun-icon/#moon-icon、.goclub-search-trigger */}}
 <header class="goclub-topbar">
   <div class="goclub-topbar-inner">
     <label for="menu-control" class="goclub-mobile-header-button goclub-topbar-btn goclub-topbar-menu-btn" aria-label="打开导航">
@@ -7,23 +8,38 @@
 
     {{ partial "docs/brand" . }}
 
-    {{/* 顶栏菜单行（VPNav 形态）：站内主栏目，当前栏目品牌色高亮 */}}
-    <nav class="goclub-topbar-nav" aria-label="主栏目">
-      {{ $cur := . }}
-      {{ range slice "docs/interview" "docs/baguwen" "docs/resources" "docs/project-study" }}
-        {{ with $cur.Site.GetPage . }}
-          <a href="{{ .RelPermalink }}"{{ if strings.HasPrefix $cur.RelPermalink .RelPermalink }} class="active" aria-current="true"{{ end }}>{{ .Title }}</a>
-        {{ end }}
-      {{ end }}
-    </nav>
-
-    <div class="goclub-topbar-spacer"></div>
-
     <button type="button" class="goclub-search-trigger goclub-topbar-search" aria-label="搜索知识库">
       {{ partial "goclub/icon" (dict "name" "search" "class" "goclub-topbar-icon") }}
       <span class="goclub-topbar-search-text">搜索知识库</span>
       <kbd class="goclub-topbar-kbd">S</kbd>
     </button>
+
+    <div class="goclub-topbar-spacer"></div>
+
+    {{/* 顶栏菜单行（VPNavMenu 形态）：四个主栏目直链 + 「更多」下拉（其余栏目），当前栏目品牌色高亮 */}}
+    {{ $cur := . }}
+    <nav class="goclub-topbar-nav" aria-label="主栏目">
+      {{ range slice "docs/interview" "docs/baguwen" "docs/resources" "docs/project-study" }}
+        {{ with $cur.Site.GetPage . }}
+          <a href="{{ .RelPermalink }}"{{ if strings.HasPrefix $cur.RelPermalink .RelPermalink }} class="active" aria-current="true"{{ end }}>{{ .Title }}</a>
+        {{ end }}
+      {{ end }}
+      <div class="goclub-topbar-more">
+        <button type="button" class="goclub-topbar-more-btn" aria-haspopup="true">
+          <span>更多</span>
+          {{ partial "goclub/icon" (dict "name" "chevron-down" "class" "goclub-topbar-more-icon") }}
+        </button>
+        <div class="goclub-topbar-flyout">
+          <div class="goclub-topbar-flyout-panel">
+            {{ range slice "docs/companion" "docs/blog" "docs/jobs" "docs/contributors" }}
+              {{ with $cur.Site.GetPage . }}
+                <a href="{{ .RelPermalink }}"{{ if strings.HasPrefix $cur.RelPermalink .RelPermalink }} class="active" aria-current="true"{{ end }}>{{ .Title }}</a>
+              {{ end }}
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <span class="goclub-topbar-divider" aria-hidden="true"></span>
 
@@ -33,10 +49,17 @@
     </label>
     {{ end }}
 
+    {{/* 外观切换：VP VPSwitchAppearance 形态（轨道+圆钮，钮内图标随主题换，逻辑仍走 #theme-toggle 的 JS） */}}
     <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
-      {{ partial "goclub/icon" (dict "name" "sun" "class" "theme-icon" "id" "sun-icon") }}
-      {{ partial "goclub/icon" (dict "name" "moon" "class" "theme-icon" "id" "moon-icon" "hidden" true) }}
+      <span class="goclub-switch-track" aria-hidden="true">
+        <span class="goclub-switch-knob">
+          {{ partial "goclub/icon" (dict "name" "sun" "class" "goclub-switch-icon" "id" "sun-icon") }}
+          {{ partial "goclub/icon" (dict "name" "moon" "class" "goclub-switch-icon" "id" "moon-icon" "hidden" true) }}
+        </span>
+      </span>
     </button>
+
+    <span class="goclub-topbar-divider" aria-hidden="true"></span>
 
     <a class="goclub-topbar-github" href="https://github.com/Wanfeng1028/GoClub" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库">
       <svg class="goclub-topbar-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

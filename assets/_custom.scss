@@ -177,6 +177,11 @@ main.container {
   padding: 0; /* 主题 .container 的 1rem 顶 padding 会把正文起点压到 VP 公式之外 */
 }
 
+/* ============ 2b. 滚动条隐藏（全站只保留滚动功能，不显示滚动条） ============ */
+/* 主页面、左侧栏、右侧大纲、搜索结果、代码块横滚一律适用；Windows 下 Chromium 的粗灰滚动条即由此去掉 */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
 /* ============ 3. 顶栏（64px 实色，无 blur） ============ */
 .goclub-topbar {
   position: fixed;
@@ -206,12 +211,17 @@ main.container {
   text-decoration: none;
   min-width: 0;
 }
-/* 品牌标：本站原创 logo（static/logo.svg，自带圆角方形底与配色） */
+/* 品牌标：本站原创 logo（static/logo.svg；当前为新 logo 候选 1 占位，等用户挑定） */
 .book-brand-logo { display: block; width: 30px; height: 30px; flex: 0 0 auto; }
-.book-brand-copy { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+/* VP 顶栏为单行站名（16px/600），无副标题行 */
 .book-brand-name { font-size: 16px; font-weight: 600; color: var(--vp-text-1); white-space: nowrap; }
-/* VP 顶栏标题为单行站名，不带副标题 */
-.book-brand-tag { display: none; }
+/* 候选 1 为品牌蓝单色字形：深色顶栏下提亮，避免蓝贴近黑底看不清（占位期处理） */
+:root[data-theme="dark"] .book-brand-logo,
+:root[data-theme="dark"] .home-hero-logo { filter: brightness(1.55) saturate(1.05); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .book-brand-logo,
+  :root:not([data-theme="light"]) .home-hero-logo { filter: brightness(1.55) saturate(1.05); }
+}
 .goclub-topbar-spacer { flex: 1 1 auto; }
 .goclub-topbar a { flex: none; }
 .goclub-topbar-icon { width: 18px; height: 18px; flex: 0 0 auto; }
@@ -226,13 +236,15 @@ main.container {
   cursor: pointer;
 }
 .goclub-topbar-btn:hover { background: var(--vp-bg-soft); color: var(--vp-text-1); }
-/* 顶栏搜索：VitePress 式浅灰底、无边框、6px 圆角 */
+/* 顶栏搜索（VPNavBarSearch 位置：品牌右侧、菜单左侧）：flex 占中部，max 320px，soft 底、无边框、8px 圆角 */
 .goclub-topbar-search {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 200px;
-  height: 36px;
+  flex: 1 1 auto;
+  max-width: 320px;
+  height: 40px;
+  margin-inline-start: 12px;
   padding: 0 10px 0 12px;
   border: none;
   border-radius: 8px;
@@ -272,6 +284,69 @@ main.container {
   .goclub-topbar-nav a:hover { color: var(--vp-brand-1); }
   .goclub-topbar-nav a.active { color: var(--vp-brand-1); }
 }
+/* 「更多」下拉（VP flyout：纯 CSS hover/focus 展开，白底、divider 边、圆角 12、轻阴影） */
+.goclub-topbar-more { position: relative; display: flex; align-items: stretch; }
+.goclub-topbar-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 12px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--vp-text-1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.goclub-topbar-more-btn:hover { color: var(--vp-brand-1); }
+.goclub-topbar-more-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--vp-text-2);
+  transition: transform 0.2s ease-in-out;
+}
+.goclub-topbar-more:hover .goclub-topbar-more-icon,
+.goclub-topbar-more:focus-within .goclub-topbar-more-icon { transform: rotate(180deg); }
+.goclub-topbar-flyout {
+  position: absolute;
+  top: 100%;
+  inset-inline-end: 0;
+  z-index: 55;
+  padding-top: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease-in-out, transform 0.18s ease-in-out, visibility 0.18s;
+}
+.goclub-topbar-more:hover .goclub-topbar-flyout,
+.goclub-topbar-more:focus-within .goclub-topbar-flyout {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.goclub-topbar-flyout-panel {
+  min-width: 184px;
+  padding: 8px;
+  border: 1px solid var(--vp-divider);
+  border-radius: 12px;
+  background: var(--vp-bg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+.goclub-topbar-flyout-panel a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--vp-text-1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.goclub-topbar-flyout-panel a:hover { background: var(--vp-bg-soft); color: var(--vp-brand-1); }
+.goclub-topbar-flyout-panel a.active { color: var(--vp-brand-1); }
 /* 顶栏竖分隔线（VP nav 的 controls 分隔） */
 .goclub-topbar-divider {
   flex: 0 0 auto;
@@ -296,21 +371,47 @@ main.container {
 }
 .goclub-topbar .goclub-topbar-github:hover { color: var(--vp-text-1); }
 .goclub-topbar-github svg { width: 20px; height: 20px; }
+/* 外观切换（VP VPSwitchAppearance：40×22 轨道 + 18px 圆钮，钮内 sun/moon 图标随主题换；
+   圆钮位移由 CSS 按生效主题驱动，与 book.scss 的主题应用条件保持一致） */
 .theme-toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 36px;
   height: 36px;
-  padding: 0;
+  padding: 0 2px;
   border: none;
-  border-radius: 6px;
   background: none;
-  color: var(--vp-text-2);
   cursor: pointer;
 }
-.theme-toggle:hover { color: var(--vp-brand-1); }
-.theme-icon { width: 18px; height: 18px; }
+.goclub-switch-track {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 22px;
+  border: 1px solid var(--vp-divider);
+  border-radius: 11px;
+  background: var(--vp-bg-soft);
+  transition: border-color 0.25s, background-color 0.25s;
+}
+.theme-toggle:hover .goclub-switch-track { border-color: var(--vp-text-3); }
+.goclub-switch-knob {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--vp-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s;
+}
+.goclub-switch-knob svg { width: 12px; height: 12px; color: var(--vp-text-2); }
+:root[data-theme="dark"] .goclub-switch-knob { transform: translateX(18px); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .goclub-switch-knob { transform: translateX(18px); }
+}
 
 /* Lucide 图标统一规则（原件 assets/icons/lucide/，stroke=currentColor 自适应明暗） */
 .lucide-icon { display: inline-block; vertical-align: middle; flex: 0 0 auto; }
@@ -349,7 +450,7 @@ main.container {
   font-weight: inherit;
 }
 
-/* 子项平铺：14px/500、行高 32px、无文件树线、无 chevron */
+/* 子项平铺：14px/500、行高 32px、无文件树线；带子级的节点行尾有可折叠 chevron */
 .book-menu .goclub-menu-directory > ul > li > ul { margin-top: 2px; }
 .book-menu .goclub-menu-directory > ul > li > ul li { margin: 0; }
 .book-menu .goclub-menu-directory > ul > li > ul a,
@@ -385,6 +486,24 @@ main.container {
 }
 .book-section-flat > a, .book-section-flat > label { font-weight: 700; }
 
+/* 侧栏可折叠（恢复 hugo-book 原生 checkbox 折叠，模板已按「当前/祖先」预勾选，全端生效）：
+   默认只展开当前页所在路径，其余分支收起；点节点行尾 chevron 只展开/收起、不跳转，
+   点标题文字仍进栏目页；子列表显隐与 chevron 旋转 90° 朝下由主题原生规则负责。
+   chevron 是 <img>（Lucide chevron-right 原件），吃不到文字色，用透明度模拟 text-3 灰：
+   平时淡、hover 才明显。 */
+.book-menu nav label > img.book-icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin-inline-start: 4px;
+  opacity: 0.4;
+  transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out;
+}
+.book-menu nav label:hover > img.book-icon { opacity: 0.85; }
+.book-menu nav input.toggle:checked + label > img.book-icon { opacity: 0.7; }
+/* 展开瞬间轻淡入，缓和整列高度跳变（纯 CSS，不引 JS） */
+.book-menu nav input.toggle:checked + label + ul { animation: gc-menu-fade 0.18s ease-in-out; }
+
 @media screen and (min-width: 56.01rem) {
   /* 桌面：固定 272px 列，宽度变量与折叠状态一律失效（VP 侧栏不可调） */
   .book-menu { flex: 0 0 var(--vp-sidebar-w); }
@@ -404,10 +523,7 @@ main.container {
     transform: none;
     visibility: visible;
   }
-  /* 桌面强制展开所有分组（去掉 hugo-book 文件树折叠） */
-  .book-menu nav input.toggle { display: none; }
-  .book-menu nav input.toggle + label + ul { display: block; }
-  .book-menu nav label > img.book-icon { display: none; }
+  /* 侧栏折叠在桌面端同样生效（chevron 与展开规则见第 4 节通用规则，不再强制全展开） */
   /* 首页无侧栏（VP home 布局） */
   body.book-kind-home .book-menu { display: none; }
   /* 侧栏内搜索框桌面不占位：面板未展开时视觉隐藏，保留 focus/click 唤起浮层 */
@@ -422,6 +538,12 @@ main.container {
     white-space: nowrap;
     border: none;
   }
+}
+
+/* 侧栏分支展开时的淡入（配合上面的 animation） */
+@keyframes gc-menu-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ============ 5. 搜索（浮层为实色弹窗；筛选为下划线 tab） ============ */
@@ -821,7 +943,8 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 
 /* ============ 9. 首页（VPHero + VPFeatures 规格） ============ */
 /* VPHero（has-image 形态）: padding calc(nav+48) 24 48 → ≥640: calc(nav+80) 48 64；本站顶栏已占位，故用 48 / 80。
-   左文右图（≥960 横排），name 纯色（用户禁蓝紫渐变），右侧只放本站 logo 本体、无光晕垫底。 */
+   左文右图（≥960 横排）；本轮按 vitejs.cn 首页 1:1 口径：name 用 Vite 同款渐变大字，
+   右侧大 logo 背后带一团品牌蓝紫系柔光晕（覆盖上一轮「无渐变/无光晕」的处理）。 */
 .home-hero {
   display: flex;
   flex-direction: column;
@@ -842,13 +965,26 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 }
 .home-hero-image {
   order: -1;
+  position: relative;
   display: flex;
   justify-content: center;
 }
 @media screen and (min-width: 60rem) {
   .home-hero-image { order: 0; flex: 0 0 auto; }
 }
-.home-hero-logo { display: block; width: 168px; height: 168px; }
+/* logo 背后的柔光晕：品牌蓝紫系多团 radial 光斑 + 大 blur（照 Vite 首页 hero 图区） */
+.home-hero-glow {
+  position: absolute;
+  inset: 6% 2%;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 32% 30%, rgba(100, 108, 255, 0.55), transparent 62%),
+    radial-gradient(circle at 72% 68%, rgba(189, 52, 254, 0.42), transparent 62%),
+    radial-gradient(circle at 66% 22%, rgba(65, 209, 255, 0.38), transparent 55%);
+  filter: blur(52px);
+  pointer-events: none;
+}
+.home-hero-logo { position: relative; z-index: 1; display: block; width: 168px; height: 168px; }
 @media screen and (min-width: 40rem) {
   .home-hero-logo { width: 240px; height: 240px; }
 }
@@ -861,7 +997,12 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   font-weight: 700;
   letter-spacing: -0.4px;
   line-height: 40px;
-  color: var(--vp-text-1);
+  /* Vite 首页同款渐变大字（紫→青） */
+  background: linear-gradient(120deg, #bd34fe 20%, #41d1ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 .home-hero .home-hero-text {
   margin: 0;
@@ -880,6 +1021,21 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   font-weight: 500;
   line-height: 28px;
   color: var(--vp-text-2);
+}
+/* tagline 前的小徽标胶囊（VP 首页的版本徽标位，本站写真实短标） */
+.home-hero-badge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 10px;
+  border: 1px solid var(--vp-divider);
+  border-radius: 999px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-2);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22px;
+  vertical-align: 2px;
+  white-space: nowrap;
 }
 @media screen and (min-width: 40rem) {
   .home-hero .home-hero-name { font-size: 48px; line-height: 56px; }
@@ -900,12 +1056,12 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 @media screen and (min-width: 40rem) {
   .home-actions { padding-top: 32px; }
 }
-/* VPButton.medium: radius 20px、padding 0 20px、line-height 38px、14px/500、实心无描边 */
+/* VPButton.medium: radius 20px、padding 0 20px、line-height 38px、14px/500；主钮实心、次钮描边+soft 底 */
 .markdown a.home-btn {
   flex: 0 0 auto;
   display: inline-block;
   padding: 0 20px;
-  border: 1px solid transparent;
+  border: 1px solid var(--vp-divider);
   border-radius: 20px;
   background: var(--vp-bg-soft);
   color: var(--vp-text-1);
@@ -916,7 +1072,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   text-decoration: none;
 }
 .markdown a.home-btn:hover { background: var(--vp-bg-soft-hover); color: var(--vp-text-1); text-decoration: none; }
-.markdown a.home-btn-primary { background: var(--vp-btn-bg); color: #fff; }
+.markdown a.home-btn-primary { border-color: transparent; background: var(--vp-btn-bg); color: #fff; }
 .markdown a.home-btn-primary:hover { background: var(--vp-btn-hover); color: #fff; }
 
 /* VPFeatures: 卡片 bg-soft、radius 12、padding 24；图标盒 48px/radius 6 */
@@ -968,7 +1124,6 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
-.home-card-meta { display: block; margin-top: 12px; font-size: 13px; color: var(--vp-text-3); }
 
 /* ============ 10. 栏目索引（VP 正文式：无自创索引大标题，前言后直接是带摘要的链接列表） ============ */
 .section-index-shell { margin-top: 8px; }
@@ -1277,8 +1432,11 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   .page-lead-title { font-size: 28px; } /* vp-doc h1 移动端 */
   .goclub-topbar-btn { display: flex; }
   .goclub-topbar-search {
+    flex: 0 0 auto;
     width: 36px;
+    max-width: none;
     height: 36px;
+    margin-inline-start: 0;
     padding: 0;
     justify-content: center;
     background: none;

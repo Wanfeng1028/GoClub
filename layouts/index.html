@@ -1,61 +1,56 @@
 {{ define "main" }}
-  {{ $docs := .Site.GetPage "section" "docs" }}
   {{ $submitPage := .Site.GetPage "/docs/blog/提交流程.md" }}
   {{ $githubURL := "https://github.com/Wanfeng1028/GoClub" }}
-  {{ $interviewSubmissionURL := "https://github.com/Wanfeng1028/GoClub/issues/new?template=interview-question.yml" }}
-  {{ $sections := slice }}
-  {{ with $docs }}
-    {{ range where .Pages "Params.bookHidden" "ne" true }}
-      {{ if and .IsSection .Content }}
-        {{ $sections = $sections | append . }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
+  {{ $startPage := .Site.GetPage "docs/baguwen" }}
 
   <article class="markdown book-article home-article">
+    {{/* VPHero：左文右图。name 渐变大字、text 深色大标题、tagline 带徽标胶囊、三枚 VPButton；
+         右侧大 logo 背后一团品牌蓝紫系柔光晕（本轮按 vitejs.cn 首页 1:1 口径，恢复渐变与光晕）。 */}}
     <section class="home-hero">
       <div class="home-hero-main">
         <h1 class="home-hero-name">GoClub</h1>
-        <p class="home-hero-text">Go 面试知识库</p>
-        <p class="home-hero-tagline">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。面经可以先用 AI 整理，再通过 Issue 表单投稿；其他内容和纠错也欢迎提 PR。</p>
+        <p class="home-hero-text">Go 后端面试知识库</p>
+        <p class="home-hero-tagline"><span class="home-hero-badge">社区共建</span>八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。</p>
         <nav class="home-actions" aria-label="快速操作">
-          {{ with $submitPage }}
-            <a class="home-btn home-btn-primary" href="{{ .RelPermalink }}">面经投稿流程</a>
+          {{ with $startPage }}
+            <a class="home-btn home-btn-primary" href="{{ .RelPermalink }}">开始学习</a>
           {{ end }}
-          <a class="home-btn" href="{{ $interviewSubmissionURL }}" target="_blank" rel="noopener noreferrer">提交面经</a>
-          <a class="home-btn" href="{{ $githubURL }}" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+          {{ with $submitPage }}
+            <a class="home-btn" href="{{ .RelPermalink }}">面经投稿流程</a>
+          {{ end }}
+          <a class="home-btn" href="{{ $githubURL }}" target="_blank" rel="noopener noreferrer">在 GitHub 上查看</a>
         </nav>
       </div>
       <div class="home-hero-image">
+        <span class="home-hero-glow" aria-hidden="true"></span>
         <img class="home-hero-logo" src="{{ "logo.svg" | relURL }}" alt="GoClub 标志" width="320" height="320">
       </div>
     </section>
 
-    <section class="home-sections" aria-label="全部栏目">
+    {{/* VPFeatures：固定 6 个栏目卡（技术博客/贡献者走顶栏「更多」与页脚），图标+标题+一句话摘要 */}}
+    <section class="home-sections" aria-label="核心栏目">
       <div class="home-grid">
-        {{ range $item := $sections }}
-          {{ $summary := partial "goclub/lead-summary.html" . }}
-          {{ $children := where .Pages "Params.bookHidden" "ne" true }}
-          {{ $icon := "library" }}
-          {{ $t := $item.Title }}
-          {{ if in $t "面试" }}{{ $icon = "messages-square" }}
-          {{ else if in $t "八股" }}{{ $icon = "book-open" }}
-          {{ else if in $t "资源" }}{{ $icon = "folder-open" }}
-          {{ else if in $t "配套" }}{{ $icon = "file-text" }}
-          {{ else if in $t "项目" }}{{ $icon = "code" }}
-          {{ else if in $t "博客" }}{{ $icon = "pen-line" }}
-          {{ else if in $t "求职" }}{{ $icon = "briefcase" }}
-          {{ else if in $t "就业" }}{{ $icon = "briefcase" }}
-          {{ else if in $t "贡献" }}{{ $icon = "users" }}
-          {{ end }}
-          <a class="home-card" href="{{ $item.RelPermalink }}">
-            <span class="home-card-icon" aria-hidden="true">{{ partial "goclub/icon" (dict "name" $icon) }}</span>
-            <span class="home-card-title">{{ partial "docs/title" $item }}</span>
-            {{ with $summary }}
-              <span class="home-card-summary">{{ . }}</span>
+        {{ range slice "docs/interview" "docs/baguwen" "docs/resources" "docs/project-study" "docs/companion" "docs/jobs" }}
+          {{ with $.Site.GetPage . }}
+            {{ $summary := partial "goclub/lead-summary.html" . }}
+            {{ $icon := "library" }}
+            {{ $t := .Title }}
+            {{ if in $t "面试" }}{{ $icon = "messages-square" }}
+            {{ else if in $t "八股" }}{{ $icon = "book-open" }}
+            {{ else if in $t "资源" }}{{ $icon = "folder-open" }}
+            {{ else if in $t "配套" }}{{ $icon = "file-text" }}
+            {{ else if in $t "项目" }}{{ $icon = "code" }}
+            {{ else if in $t "求职" }}{{ $icon = "briefcase" }}
+            {{ else if in $t "就业" }}{{ $icon = "briefcase" }}
             {{ end }}
-            <span class="home-card-meta">{{ len $children }} 页</span>
-          </a>
+            <a class="home-card" href="{{ .RelPermalink }}">
+              <span class="home-card-icon" aria-hidden="true">{{ partial "goclub/icon" (dict "name" $icon) }}</span>
+              <span class="home-card-title">{{ partial "docs/title" . }}</span>
+              {{ with $summary }}
+                <span class="home-card-summary">{{ . }}</span>
+              {{ end }}
+            </a>
+          {{ end }}
         {{ end }}
       </div>
     </section>
