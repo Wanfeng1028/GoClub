@@ -132,10 +132,8 @@ body:has(.goclub-topbar) { padding-top: var(--gc-topbar-h); }
   border-radius: 7px;
   background: var(--gc-accent);
   color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
 }
+.book-brand-mark svg { width: 17px; height: 17px; }
 .book-brand-copy { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
 .book-brand-name { font-size: 15px; font-weight: 600; color: var(--gc-text); white-space: nowrap; }
 .book-brand-tag { font-size: 11px; color: var(--gc-text-3); white-space: nowrap; }
