@@ -1008,6 +1008,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   .home-hero .home-title { font-size: 40px; line-height: 48px; }
 }
 .home-hero .home-tagline {
+  text-wrap: balance;
   margin: 16px auto 0;
   max-width: 660px;
   font-size: 17px;
@@ -1055,8 +1056,8 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   gap: 12px;
   margin-top: 24px;
 }
-/* hero 两个主操作：胶囊按钮（用户 2026-10-23 亲定）——主钮品牌蓝实心，次钮 soft 底 */
-.markdown .home-hero a.home-link {
+/* 首页全部操作钮统一胶囊（hero + 共建区，用户 2026-10-23 亲定）：主钮 Gemini 渐变实心，次钮 soft 底；flex:none 是为了压住主题给 .markdown a 的 flex:1（否则按钮被拉满整行） */
+.markdown .home-links a.home-link {
   display: inline-flex;
   flex: 0 0 auto;
   width: auto;
@@ -1073,21 +1074,10 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   text-decoration: none;
   transition: background-color .2s ease, color .2s ease;
 }
-.markdown .home-hero a.home-link:hover { background: var(--vp-bg-soft-hover); color: var(--vp-text-1); text-decoration: none; }
-.markdown .home-hero a.home-link-primary { background: var(--gemini-gradient); color: #fff; transition: filter .2s ease; }
-.markdown .home-hero a.home-link-primary:hover { background: var(--gemini-gradient); color: #fff; filter: brightness(1.06); }
-:root[data-theme="dark"] .markdown .home-hero a.home-link-primary { color: #fff; }
-/* 共建区仍是文字链：无底无框，hover 品牌色 + 下划线 */
-.markdown .home-join a.home-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--vp-text-2);
-  text-decoration: none;
-}
-.markdown .home-join a.home-link:hover { color: var(--vp-brand-1); text-decoration: underline; text-underline-offset: 4px; }
+.markdown .home-links a.home-link:hover { background: var(--vp-bg-soft-hover); color: var(--vp-text-1); text-decoration: none; }
+.markdown .home-links a.home-link-primary { background: var(--gemini-gradient); color: #fff; transition: filter .2s ease; }
+.markdown .home-links a.home-link-primary:hover { background: var(--gemini-gradient); color: #fff; filter: brightness(1.06); }
+:root[data-theme="dark"] .markdown .home-links a.home-link-primary { color: #fff; }
 .home-link-icon { width: 15px; height: 15px; }
 
 /* 数据带：细线上下分隔，数字由模板实时计数 */
@@ -1149,6 +1139,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .home-row-title { display: block; font-size: 16px; font-weight: 600; line-height: 24px; color: var(--vp-text-1); }
 .markdown a.home-row:hover .home-row-title { color: var(--vp-brand-1); }
 .home-row-summary {
+  text-wrap: pretty;
   display: -webkit-box;
   overflow: hidden;
   margin-top: 2px;
@@ -1178,7 +1169,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   border-top: 1px solid var(--vp-divider);
   text-align: center;
 }
-.home-join-text { margin: 0 auto; max-width: 560px; font-size: 15px; line-height: 26px; color: var(--vp-text-2); }
+.home-join-text { margin: 0 auto; text-wrap: balance; max-width: 560px; font-size: 15px; line-height: 26px; color: var(--vp-text-2); }
 .home-join .home-links { margin-top: 16px; }
 
 /* 项目声明：首页底部常驻小字（与欢迎弹窗同文），细线分隔、居中、两行内 */
@@ -1191,6 +1182,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 }
 .home-declaration p {
   margin: 0;
+  text-wrap: balance;
   font-size: 13px;
   line-height: 1.85;
   color: var(--vp-text-3);
