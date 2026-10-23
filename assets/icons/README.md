@@ -7,7 +7,11 @@
 
 ## 品牌标
 
-站点品牌标（顶栏左上角原「GC」字标）已改为 Lucide `book-open`：原件在 `lucide/book-open.svg`，经 `goclub/icon` partial 内联到 `layouts/partials/docs/brand.html` 的 `.book-brand-mark`（青底白图标）。标签页图标 `static/favicon.svg` 同为 book-open 图形（青底圆角方块+白色线条），PNG 版 `favicon.png` 保留作 apple-touch-icon 与旧浏览器兜底。
+站点品牌标（顶栏左上角原「GC」字标）已改为 Lucide `book-open`：原件在 `lucide/book-open.svg`，经 `goclub/icon` partial 内联到 `layouts/partials/docs/brand.html` 的 `.book-brand-mark`（品牌色 #646cff 底白图标）。标签页图标 `static/favicon.svg` 同为 book-open 图形（品牌色圆角方块+白色线条），PNG 版 `favicon.png` 保留作 apple-touch-icon 与旧浏览器兜底。
+
+## 首页栏目卡片图标
+
+首页栏目卡片按栏目名映射 Lucide 图标（`layouts/index.html` 内按标题关键字选择）：面试真题 `messages-square`、八股总结 `book-open`、资源荟萃 `folder-open`、配套文章 `file-text`、项目学习 `code`、技术博客 `pen-line`、求职就业 `briefcase`、贡献者 `users`，未命中时用 `library`。原件同样在 `lucide/` 目录。
 
 ## 例外
 

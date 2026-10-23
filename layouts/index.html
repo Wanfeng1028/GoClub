@@ -39,7 +39,20 @@
         {{ range $item := $sections }}
           {{ $summary := partial "goclub/lead-summary.html" . }}
           {{ $children := where .Pages "Params.bookHidden" "ne" true }}
+          {{ $icon := "library" }}
+          {{ $t := $item.Title }}
+          {{ if in $t "面试" }}{{ $icon = "messages-square" }}
+          {{ else if in $t "八股" }}{{ $icon = "book-open" }}
+          {{ else if in $t "资源" }}{{ $icon = "folder-open" }}
+          {{ else if in $t "配套" }}{{ $icon = "file-text" }}
+          {{ else if in $t "项目" }}{{ $icon = "code" }}
+          {{ else if in $t "博客" }}{{ $icon = "pen-line" }}
+          {{ else if in $t "求职" }}{{ $icon = "briefcase" }}
+          {{ else if in $t "就业" }}{{ $icon = "briefcase" }}
+          {{ else if in $t "贡献" }}{{ $icon = "users" }}
+          {{ end }}
           <a class="home-card" href="{{ $item.RelPermalink }}">
+            <span class="home-card-icon" aria-hidden="true">{{ partial "goclub/icon" (dict "name" $icon) }}</span>
             <span class="home-card-title">{{ partial "docs/title" $item }}</span>
             {{ with $summary }}
               <span class="home-card-summary">{{ . }}</span>

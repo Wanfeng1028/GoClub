@@ -1,80 +1,146 @@
 /*
-  GoClub 前端重做：极简文档风（Notion / Linear 式）。
-  白底、浅灰面、墨色文字、单一 Go 青强调色；无渐变、无光晕、无重阴影。
-  本文件整体替换旧的 5830 行补丁样式，只覆写主题变量与站点自有结构，
+  GoClub 前端：VitePress / Vue 文档风（默认主题规格移植）。
+  白底、软灰面、实色顶栏；品牌色 #646cff 系；侧栏细竖线引导；
+  搜索与按钮一律小圆角矩形（6-8px），不用描边胶囊、不用磨砂玻璃。
   JS 依赖的 id/class/data 钩子保持不变。
 */
 
-/* ============ 1. 设计变量 ============ */
+/* ============ 1. 设计变量（VitePress 默认色板） ============ */
 :root {
-  --gc-bg: #ffffff;
-  --gc-surface: #f7f7f5;
-  --gc-hover: #f5f5f4;
-  --gc-active: #efefef;
-  --gc-text: #1a1a1a;
-  --gc-text-2: #6f6f6f;
-  --gc-text-3: #9d9d9a;
-  --gc-border: #e9e9e7;
-  --gc-border-strong: #d9d7d2;
-  --gc-accent: #007d9c;
-  --gc-accent-hover: #006a85;
-  --gc-accent-soft: rgba(0, 125, 156, 0.08);
-  --gc-code-bg: #f6f6f6;
-  --gc-mark: rgba(250, 204, 21, 0.4);
-  --gc-topbar-h: 56px;
-  --gc-toc-w: 220px;
-  --gc-article-w: 728px;
-  --gc-wide-w: 880px;
+  --vp-bg: #ffffff;
+  --vp-bg-soft: #f6f6f7;
+  --vp-bg-soft-hover: #ebebef;
+  --vp-card-hover: #f0f0f2;
+  --vp-text-1: #3c3c43;
+  --vp-text-2: #67676c;
+  --vp-text-3: #929295;
+  --vp-divider: #e2e2e3;
+  --vp-brand: #646cff;
+  --vp-brand-hover: #747bff;
+  --vp-brand-1: #3451b2;
+  --vp-brand-2: #3a5ccc;
+  --vp-brand-soft: rgba(100, 108, 255, 0.14);
+  --vp-brand-soft-weak: rgba(100, 108, 255, 0.08);
+  --vp-code-bg: #f6f6f7;
+  --vp-pre-bg: #f6f6f7;
+  --vp-mark-bg: rgba(100, 108, 255, 0.16);
+  --vp-selection: rgba(100, 108, 255, 0.22);
+
+  /* 兼容别名：partials 内联样式与内容组件仍引用 --gc-* / --goclub-* */
+  --gc-bg: var(--vp-bg);
+  --gc-surface: var(--vp-bg-soft);
+  --gc-hover: var(--vp-bg-soft);
+  --gc-active: #ebebef;
+  --gc-text: var(--vp-text-1);
+  --gc-text-2: var(--vp-text-2);
+  --gc-text-3: var(--vp-text-3);
+  --gc-border: var(--vp-divider);
+  --gc-border-strong: #c2c2c4;
+  --gc-accent: var(--vp-brand-1);
+  --gc-accent-hover: var(--vp-brand-2);
+  --gc-accent-soft: var(--vp-brand-soft);
+  --gc-code-bg: var(--vp-code-bg);
+  --gc-mark: var(--vp-mark-bg);
+  --gc-topbar-h: 64px;
+  --gc-toc-w: 224px;
+  --gc-article-w: 688px;
+  --gc-wide-w: 1024px;
 
   /* hugo-book 主题变量 */
   --body-background: #ffffff;
   --body-background-tint: none;
-  --body-font-color: #1a1a1a;
-  --color-link: #007d9c;
-  --color-visited-link: #007d9c;
+  --body-font-color: #3c3c43;
+  --color-link: #3451b2;
+  --color-visited-link: #3451b2;
   --icon-filter: none;
-  --gray-100: #f7f7f5;
-  --gray-200: #e9e9e7;
-  --gray-500: #9d9d9a;
+  --gray-100: #f6f6f7;
+  --gray-200: #e2e2e3;
+  --gray-500: #929295;
   --border-radius: 6px;
 
-  /* 旧变量别名（partials 内联样式仍在引用） */
-  --goclub-primary: #007d9c;
-  --goclub-primary-rgb: 0, 125, 156;
-  --goclub-border: #e9e9e7;
-  --goclub-muted-text: #6f6f6f;
-  --goclub-subtle-text: #9d9d9a;
-  --goclub-sidebar-width: 260px;
+  /* hint 短代码（VitePress custom block 近似色） */
+  --color-accent-default: #3c3c43;
+  --color-accent-default-tint: rgba(60, 60, 67, 0.1);
+  --color-accent-note: #3451b2;
+  --color-accent-note-tint: rgba(100, 108, 255, 0.14);
+  --color-accent-tip: #18794e;
+  --color-accent-tip-tint: rgba(24, 121, 78, 0.12);
+  --color-accent-important: #8250df;
+  --color-accent-important-tint: rgba(130, 80, 223, 0.12);
+  --color-accent-warning: #915930;
+  --color-accent-warning-tint: rgba(145, 89, 48, 0.12);
+  --color-accent-caution: #b8272c;
+  --color-accent-caution-tint: rgba(184, 39, 44, 0.1);
+  --color-accent-info: #3451b2;
+  --color-accent-info-tint: rgba(100, 108, 255, 0.14);
+  --color-accent-success: #18794e;
+  --color-accent-success-tint: rgba(24, 121, 78, 0.12);
+  --color-accent-danger: #b8272c;
+  --color-accent-danger-tint: rgba(184, 39, 44, 0.1);
+
+  --goclub-primary: #3451b2;
+  --goclub-primary-rgb: 52, 81, 178;
+  --goclub-border: #e2e2e3;
+  --goclub-muted-text: #67676c;
+  --goclub-subtle-text: #929295;
+  --goclub-sidebar-width: 272px;
 }
 
 @mixin gc-dark {
-  --gc-bg: #0f0f0f;
-  --gc-surface: #1a1a1a;
-  --gc-hover: #222222;
-  --gc-active: #2a2a2a;
-  --gc-text: #ececec;
-  --gc-text-2: #a3a3a3;
-  --gc-text-3: #6f6f6f;
-  --gc-border: rgba(255, 255, 255, 0.1);
-  --gc-border-strong: rgba(255, 255, 255, 0.2);
-  --gc-accent: #38b6d3;
-  --gc-accent-hover: #5cc6dd;
-  --gc-accent-soft: rgba(56, 182, 211, 0.12);
-  --gc-code-bg: #1a1a1a;
-  --gc-mark: rgba(250, 204, 21, 0.32);
-  --body-background: #0f0f0f;
-  --body-font-color: #ececec;
-  --color-link: #38b6d3;
-  --color-visited-link: #38b6d3;
+  --vp-bg: #1b1b1f;
+  --vp-bg-soft: #202127;
+  --vp-bg-soft-hover: #26262c;
+  --vp-card-hover: #26262b;
+  --vp-text-1: #dfdfd6;
+  --vp-text-2: #a8a8a3;
+  --vp-text-3: #6e6e6a;
+  --vp-divider: #2e2e32;
+  --vp-brand: #646cff;
+  --vp-brand-hover: #747bff;
+  --vp-brand-1: #a8b1ff;
+  --vp-brand-2: #bcc4ff;
+  --vp-brand-soft: rgba(168, 177, 255, 0.16);
+  --vp-brand-soft-weak: rgba(168, 177, 255, 0.1);
+  --vp-code-bg: #202127;
+  --vp-pre-bg: #161618;
+  --vp-mark-bg: rgba(168, 177, 255, 0.22);
+  --vp-selection: rgba(168, 177, 255, 0.28);
+
+  --gc-active: #2e2e32;
+  --gc-border-strong: #3e3e42;
+  --body-background: #1b1b1f;
+  --body-font-color: #dfdfd6;
+  --color-link: #a8b1ff;
+  --color-visited-link: #a8b1ff;
   --icon-filter: brightness(0) invert(0.9);
-  --gray-100: #1a1a1a;
-  --gray-200: rgba(255, 255, 255, 0.12);
-  --gray-500: #6f6f6f;
-  --goclub-primary: #38b6d3;
-  --goclub-primary-rgb: 56, 182, 211;
-  --goclub-border: rgba(255, 255, 255, 0.1);
-  --goclub-muted-text: #a3a3a3;
-  --goclub-subtle-text: #6f6f6f;
+  --gray-100: #202127;
+  --gray-200: #2e2e32;
+  --gray-500: #6e6e6a;
+
+  --color-accent-default: #dfdfd6;
+  --color-accent-default-tint: rgba(223, 223, 214, 0.1);
+  --color-accent-note: #a8b1ff;
+  --color-accent-note-tint: rgba(168, 177, 255, 0.14);
+  --color-accent-tip: #3ecf8e;
+  --color-accent-tip-tint: rgba(62, 207, 142, 0.12);
+  --color-accent-important: #b392f0;
+  --color-accent-important-tint: rgba(179, 146, 240, 0.14);
+  --color-accent-warning: #d2996a;
+  --color-accent-warning-tint: rgba(210, 153, 106, 0.14);
+  --color-accent-caution: #f07575;
+  --color-accent-caution-tint: rgba(240, 117, 117, 0.12);
+  --color-accent-info: #a8b1ff;
+  --color-accent-info-tint: rgba(168, 177, 255, 0.14);
+  --color-accent-success: #3ecf8e;
+  --color-accent-success-tint: rgba(62, 207, 142, 0.12);
+  --color-accent-danger: #f07575;
+  --color-accent-danger-tint: rgba(240, 117, 117, 0.12);
+
+  --goclub-primary: #a8b1ff;
+  --goclub-primary-rgb: 168, 177, 255;
+  --goclub-border: #2e2e32;
+  --goclub-muted-text: #a8a8a3;
+  --goclub-subtle-text: #6e6e6a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,40 +151,39 @@
 /* ============ 2. 基础 ============ */
 body {
   font-family: var(--goclub-font-body);
-  background: var(--gc-bg);
-  color: var(--gc-text);
+  background: var(--vp-bg);
+  color: var(--vp-text-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 body:has(.goclub-topbar) { padding-top: var(--gc-topbar-h); }
-::selection { background: var(--gc-accent-soft); }
+::selection { background: var(--vp-selection); }
 .container { max-width: none; }
 @media screen and (min-width: 90rem) {
   main.container { padding: 0; gap: 0; }
 }
 
-/* ============ 3. 顶栏 ============ */
+/* ============ 3. 顶栏（64px 实色，无 blur） ============ */
 .goclub-topbar {
   position: fixed;
   inset: 0 0 auto 0;
   height: var(--gc-topbar-h);
   z-index: 50;
-  background: var(--gc-bg);
-  background: color-mix(in srgb, var(--gc-bg) 88%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--gc-border);
+  background: var(--vp-bg);
+  border-bottom: 1px solid var(--vp-divider);
 }
 .goclub-topbar-inner {
   display: flex;
   align-items: center;
   gap: 8px;
   height: 100%;
-  padding: 0 16px;
+  padding: 0 32px;
 }
 .goclub-topbar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--gc-text);
+  color: var(--vp-text-1);
   text-decoration: none;
   min-width: 0;
 }
@@ -127,16 +192,16 @@ body:has(.goclub-topbar) { padding-top: var(--gc-topbar-h); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 7px;
-  background: var(--gc-accent);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--vp-brand);
   color: #fff;
 }
-.book-brand-mark svg { width: 17px; height: 17px; }
-.book-brand-copy { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
-.book-brand-name { font-size: 15px; font-weight: 600; color: var(--gc-text); white-space: nowrap; }
-.book-brand-tag { font-size: 11px; color: var(--gc-text-3); white-space: nowrap; }
+.book-brand-mark svg { width: 18px; height: 18px; }
+.book-brand-copy { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.book-brand-name { font-size: 16px; font-weight: 600; color: var(--vp-text-1); white-space: nowrap; }
+.book-brand-tag { font-size: 11px; color: var(--vp-text-3); white-space: nowrap; }
 .goclub-topbar-spacer { flex: 1 1 auto; }
 .goclub-topbar a { flex: none; }
 .goclub-topbar-icon { width: 18px; height: 18px; flex: 0 0 auto; }
@@ -146,49 +211,52 @@ body:has(.goclub-topbar) { padding-top: var(--gc-topbar-h); }
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 8px;
-  color: var(--gc-text-2);
+  border-radius: 6px;
+  color: var(--vp-text-2);
   cursor: pointer;
 }
-.goclub-topbar-btn:hover { background: var(--gc-hover); color: var(--gc-text); }
+.goclub-topbar-btn:hover { background: var(--vp-bg-soft); color: var(--vp-text-1); }
+/* 顶栏搜索：VitePress 式浅灰底、无边框、6px 圆角 */
 .goclub-topbar-search {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 200px;
-  padding: 7px 12px;
-  border: 1px solid var(--gc-border);
-  border-radius: 8px;
-  background: var(--gc-surface);
-  color: var(--gc-text-3);
+  width: 200px;
+  height: 38px;
+  padding: 0 10px 0 12px;
+  border: none;
+  border-radius: 6px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-3);
   font-size: 13px;
   cursor: text;
 }
-.goclub-topbar-search:hover { border-color: var(--gc-border-strong); }
+.goclub-topbar-search:hover { background: var(--vp-bg-soft-hover); }
 .goclub-topbar-search-text { flex: 1 1 auto; text-align: left; }
 .goclub-topbar-kbd,
 .home-search-kbd {
   padding: 1px 6px;
-  border: 1px solid var(--gc-border-strong);
+  border: 1px solid var(--vp-divider);
   border-bottom-width: 2px;
   border-radius: 4px;
-  background: var(--gc-bg);
-  color: var(--gc-text-2);
+  background: var(--vp-bg);
+  color: var(--vp-text-2);
   font-size: 11px;
   font-family: inherit;
+  line-height: 1.5;
 }
 .goclub-topbar-github {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 10px;
-  border-radius: 8px;
-  color: var(--gc-text-2);
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--vp-text-2);
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
 }
-.goclub-topbar-github:hover { background: var(--gc-hover); color: var(--gc-text); }
+.goclub-topbar-github:hover { color: var(--vp-text-1); }
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -197,16 +265,15 @@ body:has(.goclub-topbar) { padding-top: var(--gc-topbar-h); }
   height: 36px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: none;
-  color: var(--gc-text-2);
+  color: var(--vp-text-2);
   cursor: pointer;
 }
-.theme-toggle:hover { background: var(--gc-hover); color: var(--gc-text); }
+.theme-toggle:hover { color: var(--vp-brand-1); }
 .theme-icon { width: 18px; height: 18px; }
 
-/* Lucide 图标统一规则（原件 assets/icons/lucide/，stroke=currentColor 自适应明暗）：
-   尺寸只在此处与各上下文类里定，模板不写死像素。顶栏/主题/搜索 18px，菜单内 img 图标走主题 .book-icon，正文箭头 16px。 */
+/* Lucide 图标统一规则（原件 assets/icons/lucide/，stroke=currentColor 自适应明暗） */
 .lucide-icon { display: inline-block; vertical-align: middle; flex: 0 0 auto; }
 .sidebar-toggle-icon { display: inline-flex; }
 .sidebar-toggle-icon svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
@@ -216,7 +283,7 @@ body.sidebar-collapsed .sidebar-toggle-icon svg { transform: rotate(180deg); }
 .goclub-prev-next-arrow svg { width: 18px; height: 18px; }
 .book-search-close svg { width: 18px; height: 18px; }
 
-/* ============ 4. 侧边栏 ============ */
+/* ============ 4. 侧边栏（272px，细竖线引导层级） ============ */
 .book-menu {
   position: relative;
   flex: 0 0 var(--goclub-sidebar-width);
@@ -225,12 +292,17 @@ body.sidebar-collapsed .sidebar-toggle-icon svg { transform: rotate(180deg); }
 .book-menu .book-menu-content {
   width: var(--goclub-sidebar-width);
   top: var(--gc-topbar-h);
-  padding: 20px 12px 32px;
-  background: var(--gc-bg);
-  border-right: 1px solid var(--gc-border);
+  padding: 28px 16px 48px 24px;
+  background: var(--vp-bg);
+  border-right: 1px solid var(--vp-divider);
 }
 .book-menu nav ul { padding: 0; margin: 0; list-style: none; }
-.book-menu nav ul ul { padding-inline-start: 14px; }
+/* 层级缩进：细竖线引导（VitePress sidebar 的 border-left 引导线） */
+.book-menu nav ul ul {
+  margin-inline-start: 9px;
+  padding-inline-start: 9px;
+  border-inline-start: 1px solid var(--vp-divider);
+}
 .book-menu nav li { margin: 1px 0; }
 .book-menu nav a,
 .book-menu nav label {
@@ -239,40 +311,50 @@ body.sidebar-collapsed .sidebar-toggle-icon svg { transform: rotate(180deg); }
   gap: 6px;
   padding: 5px 8px;
   border-radius: 6px;
-  color: var(--gc-text-2);
-  line-height: 1.45;
+  color: var(--vp-text-2);
+  line-height: 1.5;
 }
-.book-menu nav a[href]:hover,
-.book-menu nav label:hover { background: var(--gc-hover); color: var(--gc-text); opacity: 1; }
-.book-menu nav a.active {
-  background: var(--gc-active);
-  color: var(--gc-accent);
+.book-menu nav label > a { flex: 1 1 auto; color: inherit; }
+/* 一级栏目：分组标题式（13px+ 粗体深色） */
+.book-menu .goclub-menu-directory > ul > li > a,
+.book-menu .goclub-menu-directory > ul > li > label {
+  font-size: 14px;
   font-weight: 600;
+  color: var(--vp-text-1);
+  padding: 6px 8px;
+  margin-top: 10px;
 }
-.book-menu nav a.is-ancestor { color: var(--gc-text); font-weight: 500; }
+.book-menu .goclub-menu-directory > ul > li:first-child > a,
+.book-menu .goclub-menu-directory > ul > li:first-child > label { margin-top: 0; }
+.book-menu nav a[href]:hover,
+.book-menu nav label:hover { background: var(--vp-bg-soft); color: var(--vp-text-1); opacity: 1; }
+.book-menu nav a.active {
+  background: var(--vp-brand-soft-weak);
+  color: var(--vp-brand-1);
+  font-weight: 500;
+}
+.book-menu nav a.is-ancestor { color: var(--vp-text-1); font-weight: 500; }
 .book-menu nav label > img:last-child { opacity: 0.55; }
 .book-section-flat { margin: 10px 0 4px; }
-.book-section-flat > a,
-.book-section-flat > label { font-weight: 600; color: var(--gc-text); }
 .goclub-menu-caption {
-  margin: 20px 0 6px;
+  margin: 22px 0 6px;
   padding: 0 8px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: var(--gc-text-3);
+  color: var(--vp-text-3);
 }
 .goclub-umami-stats--sidebar {
-  margin: 20px 2px 0;
+  margin: 22px 2px 0;
   padding-top: 16px;
-  border-top: 1px solid var(--gc-border);
+  border-top: 1px solid var(--vp-divider);
   font-size: 12px;
 }
 
 /* 侧边栏折叠 / 拖拽（JS: body.sidebar-collapsed / .sidebar-resizing + [data-sidebar-*]） */
 .sidebar-toggle {
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: -13px;
   z-index: 45;
   display: flex;
@@ -280,15 +362,14 @@ body.sidebar-collapsed .sidebar-toggle-icon svg { transform: rotate(180deg); }
   justify-content: center;
   width: 26px;
   height: 26px;
-  border: 1px solid var(--gc-border);
-  border-radius: 50%;
-  background: var(--gc-bg);
-  color: var(--gc-text-2);
-  font-size: 15px;
+  border: 1px solid var(--vp-divider);
+  border-radius: 8px;
+  background: var(--vp-bg);
+  color: var(--vp-text-2);
   line-height: 1;
   cursor: pointer;
 }
-.sidebar-toggle:hover { color: var(--gc-accent); border-color: var(--gc-border-strong); }
+.sidebar-toggle:hover { color: var(--vp-brand-1); border-color: var(--gc-border-strong); }
 .sidebar-resizer {
   position: absolute;
   top: 0;
@@ -299,7 +380,7 @@ body.sidebar-collapsed .sidebar-toggle-icon svg { transform: rotate(180deg); }
   z-index: 44;
 }
 .sidebar-resizer:hover,
-body.sidebar-resizing .sidebar-resizer { background: var(--gc-accent-soft); }
+body.sidebar-resizing .sidebar-resizer { background: var(--vp-brand-soft); }
 body.sidebar-resizing { cursor: col-resize; }
 body.sidebar-resizing * { transition: none !important; }
 body.sidebar-collapsed .book-menu { flex-basis: 0; }
@@ -310,29 +391,29 @@ body.sidebar-collapsed .book-menu .book-menu-content {
 body.sidebar-collapsed .sidebar-resizer { display: none; }
 body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
 
-/* ============ 5. 搜索 ============ */
-.book-search { position: relative; margin: 0 0 4px; }
+/* ============ 5. 搜索（浮层为实色弹窗；筛选为下划线 tab） ============ */
+.book-search { position: relative; margin: 0 0 14px; }
 .book-search-topbar,
 .book-search-filters { display: none; }
 .book-search-field { position: relative; }
 .book-search input {
   width: 100%;
-  padding: 8px 52px 8px 12px;
-  border: 1px solid var(--gc-border);
-  border-radius: 8px;
-  background: var(--gc-surface);
-  color: var(--gc-text);
+  height: 38px;
+  padding: 0 46px 0 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-1);
   font-size: 14px;
   line-height: 1.5;
 }
-.book-search input::placeholder { color: var(--gc-text-3); }
+.book-search input::placeholder { color: var(--vp-text-3); }
 .book-search input:focus {
   outline: none;
-  border-color: var(--gc-accent);
-  box-shadow: 0 0 0 3px var(--gc-accent-soft);
-  background: var(--gc-bg);
+  border-color: var(--vp-brand-1);
+  background: var(--vp-bg);
 }
-.book-search-spinner { border-top-color: var(--gc-text-2); }
+.book-search-spinner { border-top-color: var(--vp-text-2); }
 .book-search-clear {
   position: absolute;
   top: 50%;
@@ -340,18 +421,19 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
   transform: translateY(-50%);
   padding: 2px 8px;
   border: none;
-  border-radius: 5px;
-  background: var(--gc-active);
-  color: var(--gc-text-2);
+  border-radius: 6px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-2);
   font-size: 12px;
   cursor: pointer;
 }
+.book-search-clear:hover { background: var(--vp-bg-soft-hover); color: var(--vp-text-1); }
 .book-search-summary { margin-top: 8px; }
 .book-search-status {
   padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--gc-surface);
-  color: var(--gc-text-2);
+  border-radius: 6px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-2);
   font-size: 12.5px;
   line-height: 1.5;
 }
@@ -364,37 +446,39 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
 #book-search-results:empty { display: none; }
 .book-search.is-results-collapsed .book-search-summary,
 .book-search.is-results-collapsed #book-search-results { display: none; }
+.book-search-result { border-bottom: 1px solid var(--vp-divider); }
+.book-search-result:last-child { border-bottom: none; }
 .book-search-result a {
   display: block;
-  padding: 10px;
-  border-radius: 8px;
-  color: var(--gc-text);
+  padding: 10px 8px;
+  border-radius: 6px;
+  color: var(--vp-text-1);
   text-decoration: none;
 }
 .book-search-result a:hover,
-.book-search-result a:focus-visible { background: var(--gc-hover); }
+.book-search-result a:focus-visible { background: var(--vp-bg-soft); }
 .book-search-result-heading { display: flex; align-items: flex-start; gap: 8px; }
 .book-search-result-badge {
   flex: 0 0 auto;
   margin-top: 2px;
-  padding: 1px 7px;
-  border-radius: 999px;
-  background: var(--gc-accent-soft);
-  color: var(--gc-accent);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--vp-brand-soft);
+  color: var(--vp-brand-1);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.5;
 }
 .book-search-result-badge.is-book {
-  background: var(--gc-active);
-  color: var(--gc-text-2);
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-2);
 }
 .book-search-result-title { font-size: 14px; font-weight: 600; line-height: 1.45; }
 .book-search-result-breadcrumb {
   display: block;
   margin-top: 3px;
   overflow: hidden;
-  color: var(--gc-text-3);
+  color: var(--vp-text-3);
   font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -403,7 +487,7 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
   display: -webkit-box;
   margin-top: 4px;
   overflow: hidden;
-  color: var(--gc-text-2);
+  color: var(--vp-text-2);
   font-size: 12.5px;
   line-height: 1.55;
   -webkit-box-orient: vertical;
@@ -413,17 +497,17 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
 .book-search mark {
   padding: 0 1px;
   border-radius: 2px;
-  background: var(--gc-mark);
+  background: var(--vp-mark-bg);
   color: inherit;
 }
 
-/* 展开态：居中弹窗 */
+/* 展开态：居中实色弹窗（无磨砂无 blur） */
 .book-search-backdrop {
   position: fixed;
   inset: 0;
   z-index: 79;
   border: none;
-  background: rgba(15, 15, 15, 0.4);
+  background: rgba(0, 0, 0, 0.45);
   cursor: default;
 }
 .book-search.is-expanded {
@@ -438,12 +522,12 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
   max-width: calc(100vw - 32px);
   max-height: 80vh;
   margin: 0;
-  padding: 20px;
+  padding: 20px 20px 10px;
   overflow: hidden;
-  border: 1px solid var(--gc-border);
+  border: 1px solid var(--vp-divider);
   border-radius: 12px;
-  background: var(--gc-bg);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.16);
+  background: var(--vp-bg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
 }
 .book-search.is-expanded .book-search-topbar {
   display: flex;
@@ -454,14 +538,14 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
 }
 .book-search.is-expanded .book-search-topbar strong {
   display: block;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--gc-text);
+  color: var(--vp-text-1);
 }
 .book-search.is-expanded .book-search-topbar small {
   display: block;
   margin-top: 2px;
-  color: var(--gc-text-2);
+  color: var(--vp-text-3);
   font-size: 12.5px;
 }
 .book-search-close {
@@ -471,42 +555,44 @@ body.sidebar-collapsed .sidebar-toggle { right: auto; left: 10px; }
   width: 30px;
   height: 30px;
   border: none;
-  border-radius: 7px;
+  border-radius: 6px;
   background: none;
-  color: var(--gc-text-2);
-  font-size: 18px;
+  color: var(--vp-text-2);
   line-height: 1;
   cursor: pointer;
 }
-.book-search-close:hover { background: var(--gc-hover); color: var(--gc-text); }
-.book-search.is-expanded input { padding: 11px 56px 11px 14px; font-size: 15px; }
+.book-search-close:hover { background: var(--vp-bg-soft); color: var(--vp-text-1); }
+.book-search.is-expanded input { height: 46px; padding: 0 52px 0 14px; font-size: 15px; border-radius: 8px; }
+/* 筛选：下划线式 tab（不是描边胶囊） */
 .book-search.is-expanded .book-search-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 4px 18px;
+  margin-top: 8px;
+  border-bottom: 1px solid var(--vp-divider);
 }
 .book-search-filter {
-  padding: 4px 12px;
-  border: 1px solid var(--gc-border);
-  border-radius: 999px;
-  background: var(--gc-bg);
-  color: var(--gc-text-2);
-  font-size: 12.5px;
+  padding: 8px 1px;
+  margin-bottom: -1px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--vp-text-2);
+  font-size: 13.5px;
   cursor: pointer;
 }
-.book-search-filter:hover { border-color: var(--gc-border-strong); color: var(--gc-text); }
+.book-search-filter:hover { color: var(--vp-text-1); }
 .book-search-filter[aria-pressed="true"] {
-  border-color: var(--gc-accent);
-  background: var(--gc-accent-soft);
-  color: var(--gc-accent);
+  border-bottom-color: var(--vp-brand-1);
+  color: var(--vp-brand-1);
   font-weight: 600;
 }
-.book-search.is-expanded #book-search-results { overflow-y: auto; margin-top: 12px; }
+.book-search.is-expanded #book-search-results { overflow-y: auto; margin-top: 6px; }
 body.search-overlay-open { overflow: hidden; }
 
-/* ============ 6. 内容列与右侧目录 ============ */
-.book-page { min-width: 0; padding: 40px 32px 72px; }
+/* ============ 6. 内容列与右侧大纲 ============ */
+.book-page { min-width: 0; padding: 32px 32px 96px; }
 .book-page > .book-article,
 .book-page > .book-footer {
   width: 100%;
@@ -522,100 +608,108 @@ body.book-kind-section .book-page > .book-footer { max-width: var(--gc-wide-w); 
 .book-toc .book-toc-content {
   width: var(--gc-toc-w);
   top: var(--gc-topbar-h);
-  padding: 44px 16px 32px 4px;
+  padding: 40px 24px 32px 0;
 }
 .book-toc-title {
-  margin: 0 0 10px;
-  padding-left: 13px;
-  font-size: 12px;
+  margin: 0 0 8px;
+  padding-left: 16px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--gc-text-3);
+  color: var(--vp-text-1);
 }
+/* 大纲：整体左侧 1px 分隔线，激活品牌色 */
+.book-toc nav { border-inline-start: 1px solid var(--vp-divider); }
 .book-toc nav ul { list-style: none; margin: 0; padding: 0; }
-.book-toc nav ul ul a { padding-left: 25px; }
-.book-toc nav li { margin: 1px 0; }
+.book-toc nav li { margin: 0; }
 .book-toc nav a {
   display: block;
-  padding: 3px 0 3px 13px;
-  border-left: 1px solid var(--gc-border);
-  color: var(--gc-text-2);
+  padding: 4px 0 4px 16px;
+  color: var(--vp-text-2);
+  font-size: 13px;
   line-height: 1.5;
 }
-.book-toc nav a:hover { color: var(--gc-accent); border-left-color: var(--gc-accent); opacity: 1; }
+.book-toc nav ul ul a { padding-left: 28px; }
+.book-toc nav a:hover { color: var(--vp-brand-1); opacity: 1; }
 
-/* ============ 7. 正文排版 ============ */
-.markdown { line-height: 1.75; font-size: 1rem; }
+/* ============ 7. 正文排版（VitePress vp-doc 近似） ============ */
+.markdown { line-height: 1.7; font-size: 1rem; color: var(--vp-text-1); }
 .markdown h1, .markdown h2, .markdown h3,
 .markdown h4, .markdown h5, .markdown h6 {
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1.35;
-  color: var(--gc-text);
+  color: var(--vp-text-1);
 }
-.markdown h1 { font-size: 1.75rem; }
-.markdown h2 { font-size: 1.375rem; margin-top: 2.1em; }
-.markdown h3 { font-size: 1.125rem; margin-top: 1.8em; }
-.markdown h4 { font-size: 1rem; }
-.markdown p { margin: 0.9em 0; }
-.markdown a[href] { color: var(--gc-accent); }
-.markdown a[href]:hover { color: var(--gc-accent-hover); text-decoration: underline; }
+.markdown h1 { font-size: 2rem; line-height: 1.25; }
+.markdown h2 {
+  font-size: 1.5rem;
+  line-height: 1.35;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--vp-divider);
+}
+.markdown h3 { font-size: 1.25rem; margin-top: 32px; }
+.markdown h4 { font-size: 1rem; margin-top: 24px; }
+.markdown p { margin: 1em 0; }
+.markdown a[href] { color: var(--vp-brand-1); font-weight: 500; }
+.markdown a[href]:hover { color: var(--vp-brand-2); text-decoration: none; }
 .markdown code {
-  background: var(--gc-code-bg);
-  border: 1px solid var(--gc-border);
-  border-radius: 4px;
-  padding: 0.1em 0.35em;
+  background: var(--vp-code-bg);
+  border: none;
+  border-radius: 6px;
+  padding: 3px 6px;
   font-size: 0.875em;
+  color: var(--vp-text-1);
 }
 .markdown pre {
-  background: var(--gc-code-bg);
-  border: 1px solid var(--gc-border);
+  background: var(--vp-pre-bg);
+  border: none;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 20px 24px;
   font-size: 0.875rem;
-  line-height: 1.65;
+  line-height: 1.7;
   overflow-x: auto;
 }
 .markdown pre code { background: none; border: none; padding: 0; font-size: inherit; }
 .markdown blockquote {
   margin: 1em 0;
-  padding: 0.15em 0 0.15em 1em;
-  border-inline-start: 3px solid var(--gc-border-strong);
-  color: var(--gc-text-2);
+  padding: 0 0 0 16px;
+  border-inline-start: 1px solid var(--vp-divider);
+  color: var(--vp-text-2);
   background: none;
 }
-.markdown table { font-size: 0.9rem; border-collapse: collapse; }
-.markdown table th, .markdown table td { border: 1px solid var(--gc-border); padding: 7px 12px; }
-.markdown table th { background: var(--gc-surface); font-weight: 600; text-align: left; }
-.markdown hr { border: none; border-top: 1px solid var(--gc-border); margin: 2em 0; }
+.markdown table { font-size: 0.875rem; border-collapse: collapse; }
+.markdown table th, .markdown table td { border: 1px solid var(--vp-divider); padding: 8px 16px; }
+.markdown table th { background: var(--vp-bg-soft); font-weight: 600; text-align: left; }
+.markdown hr { border: none; border-top: 1px solid var(--vp-divider); margin: 2em 0; }
 .markdown img { max-width: 100%; height: auto; border-radius: 8px; }
 .markdown ul, .markdown ol { padding-inline-start: 1.4em; }
 .markdown li { margin: 0.3em 0; }
-.markdown .highlight pre, .markdown .highlight code { background: var(--gc-code-bg); }
-mark.goclub-search-hit { background: var(--gc-mark); color: inherit; border-radius: 2px; padding: 0 1px; }
-mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
+.markdown .highlight pre, .markdown .highlight code { background: var(--vp-pre-bg); }
+mark.goclub-search-hit { background: var(--vp-mark-bg); color: inherit; border-radius: 2px; padding: 0 1px; }
+mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 
 /* ============ 8. 页首（文章 / 栏目） ============ */
-.page-lead { margin-bottom: 34px; }
+.page-lead { margin-bottom: 32px; }
 .page-lead-overline {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
-  font-size: 13px;
-  color: var(--gc-text-3);
+  font-size: 14px;
+  color: var(--vp-text-3);
 }
-.page-lead-overline a { color: var(--gc-text-2); }
-.page-lead-overline a:hover { color: var(--gc-accent); }
+.page-lead-overline a { color: var(--vp-text-2); font-weight: 400; }
+.page-lead-overline a:hover { color: var(--vp-brand-1); }
 .page-lead-title {
   margin: 0 0 12px;
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.25;
-  color: var(--gc-text);
+  color: var(--vp-text-1);
 }
-.page-lead-summary { color: var(--gc-text-2); font-size: 1.0625rem; line-height: 1.7; }
+.page-lead-summary { color: var(--vp-text-2); font-size: 1rem; line-height: 1.7; }
 .page-lead-summary p { margin: 0; }
 .page-lead-meta {
   display: flex;
@@ -624,21 +718,23 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   gap: 8px 18px;
   margin-top: 18px;
   font-size: 13px;
-  color: var(--gc-text-3);
+  color: var(--vp-text-3);
 }
 .page-lead-actions { margin-top: 16px; }
 .page-hero-button {
   display: inline-flex;
-  padding: 8px 16px;
+  align-items: center;
+  height: 38px;
+  padding: 0 18px;
   border-radius: 8px;
-  background: var(--gc-text);
-  color: var(--gc-bg) !important;
+  background: var(--vp-brand);
+  color: #fff !important;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none !important;
 }
-.page-hero-button:hover { opacity: 0.85; }
-.section-preface, .section-body-content { color: var(--gc-text); }
+.page-hero-button:hover { background: var(--vp-brand-hover); }
+.section-preface, .section-body-content { color: var(--vp-text-1); }
 .section-preface > :first-child, .section-body-content > :first-child { margin-top: 0; }
 
 /* 复制短链按钮 */
@@ -647,35 +743,35 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   align-items: center;
   gap: 7px;
   padding: 4px 11px;
-  border: 1px solid var(--gc-border);
-  border-radius: 7px;
-  background: var(--gc-bg);
-  color: var(--gc-text-2);
+  border: 1px solid var(--vp-divider);
+  border-radius: 6px;
+  background: var(--vp-bg);
+  color: var(--vp-text-2);
   font-size: 12.5px;
   cursor: pointer;
 }
-.goclub-share:hover { background: var(--gc-hover); color: var(--gc-text); }
-.goclub-share.is-done { border-color: var(--gc-accent); color: var(--gc-accent); }
+.goclub-share:hover { background: var(--vp-bg-soft); color: var(--vp-text-1); }
+.goclub-share.is-done { border-color: var(--vp-brand-1); color: var(--vp-brand-1); }
 .goclub-share.is-error { border-color: #d84747; color: #c03636; }
 .goclub-share-icon svg { width: 14px; height: 14px; display: block; }
-.goclub-share-url { color: var(--gc-text-3); font-size: 12px; }
+.goclub-share-url { color: var(--vp-text-3); font-size: 12px; }
 
-/* ============ 9. 首页 ============ */
-.home-hero { padding: 24px 0 40px; border-bottom: 1px solid var(--gc-border); margin-bottom: 40px; }
+/* ============ 9. 首页（hero + features 式卡片） ============ */
+.home-hero { padding: 16px 0 48px; margin-bottom: 48px; }
 .home-title {
-  margin: 0 0 14px;
-  font-size: 2.5rem;
+  margin: 0 0 16px;
+  font-size: 3rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--gc-text);
+  line-height: 1.15;
+  color: var(--vp-text-1);
 }
 .home-subtitle {
-  max-width: 620px;
-  margin: 0 0 28px;
-  font-size: 1.0625rem;
-  line-height: 1.7;
-  color: var(--gc-text-2);
+  max-width: 640px;
+  margin: 0 0 32px;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--vp-text-2);
 }
 .home-search {
   display: flex;
@@ -683,77 +779,98 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   gap: 10px;
   width: 100%;
   max-width: 560px;
-  padding: 12px 16px;
-  border: 1px solid var(--gc-border-strong);
-  border-radius: 10px;
-  background: var(--gc-bg);
-  color: var(--gc-text-3);
+  padding: 13px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-3);
   font-size: 15px;
   text-align: left;
   cursor: text;
 }
-.home-search:hover { border-color: var(--gc-accent); }
+.home-search:hover { background: var(--vp-bg-soft-hover); }
 .home-search-icon { width: 18px; height: 18px; flex: 0 0 auto; }
 .home-search-text { flex: 1 1 auto; }
-.home-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.home-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 .markdown a.home-btn {
   display: inline-flex;
-  padding: 8px 16px;
-  border: 1px solid var(--gc-border-strong);
+  align-items: center;
+  height: 40px;
+  padding: 0 20px;
+  border: none;
   border-radius: 8px;
-  background: var(--gc-bg);
-  color: var(--gc-text);
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-1);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
-.markdown a.home-btn:hover { background: var(--gc-hover); text-decoration: none; color: var(--gc-text); }
-.markdown a.home-btn-primary {
-  background: var(--gc-text);
-  border-color: var(--gc-text);
-  color: var(--gc-bg);
-}
-.markdown a.home-btn-primary:hover { background: var(--gc-text); opacity: 0.85; color: var(--gc-bg); }
+.markdown a.home-btn:hover { background: var(--vp-bg-soft-hover); text-decoration: none; color: var(--vp-text-1); }
+.markdown a.home-btn-primary { background: var(--vp-brand); color: #fff; }
+.markdown a.home-btn-primary:hover { background: var(--vp-brand-hover); color: #fff; }
 .home-sections-heading {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   margin-bottom: 16px;
 }
-.home-sections-heading h2 { margin: 0; font-size: 1.25rem; font-weight: 600; }
-.home-sections-count { font-size: 13px; color: var(--gc-text-3); }
-.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.home-sections-heading h2 {
+  margin: 0;
+  padding-top: 0;
+  border-top: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.home-sections-count { font-size: 13px; color: var(--vp-text-3); }
+.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+/* features 式卡片：软底无边框、12px 圆角、hover 仅底色微深 */
 .markdown a.home-card {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
-  padding: 20px;
-  border: 1px solid var(--gc-border);
-  border-radius: 10px;
-  background: var(--gc-bg);
-  color: var(--gc-text);
+  gap: 0;
+  padding: 24px;
+  border: none;
+  border-radius: 12px;
+  background: var(--vp-bg-soft);
+  color: var(--vp-text-1);
   text-decoration: none;
 }
 .markdown a.home-card:hover {
-  border-color: var(--gc-border-strong);
-  background: var(--gc-surface);
+  background: var(--vp-card-hover);
   text-decoration: none;
 }
-.home-card-title { font-size: 1.0625rem; font-weight: 600; color: var(--gc-text); }
+.home-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  background: var(--vp-bg);
+  color: var(--vp-text-1);
+}
+:root[data-theme="dark"] .home-card-icon { background: #2e2e32; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .home-card-icon { background: #2e2e32; }
+}
+.home-card-icon svg { width: 24px; height: 24px; }
+.home-card-title { font-size: 1rem; font-weight: 600; color: var(--vp-text-1); }
 .home-card-summary {
   flex: 1 1 auto;
-  font-size: 0.9rem;
+  margin-top: 6px;
+  font-size: 0.875rem;
   line-height: 1.65;
-  color: var(--gc-text-2);
+  color: var(--vp-text-2);
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
-.home-card-meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gc-text-3); }
+.home-card-meta { display: flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 13px; color: var(--vp-text-3); }
 .home-card-arrow { transition: transform 0.15s ease; }
-.home-card:hover .home-card-arrow { transform: translateX(3px); color: var(--gc-accent); }
+.home-card:hover .home-card-arrow { transform: translateX(3px); color: var(--vp-brand-1); }
 
 /* ============ 10. 栏目索引列表 ============ */
 .section-index-shell { margin-top: 44px; }
@@ -763,8 +880,14 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   justify-content: space-between;
   margin-bottom: 14px;
 }
-.section-index-heading h2 { margin: 0; font-size: 1.25rem; font-weight: 600; }
-.section-index-count { font-size: 13px; color: var(--gc-text-3); }
+.section-index-heading h2 {
+  margin: 0;
+  padding-top: 0;
+  border-top: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.section-index-count { font-size: 13px; color: var(--vp-text-3); }
 .section-directory-group + .section-directory-group { margin-top: 32px; }
 .section-directory-heading {
   display: flex;
@@ -772,58 +895,55 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.section-directory-heading h3 { margin: 0; font-size: 1rem; font-weight: 600; }
-.section-directory-heading span { font-size: 12.5px; color: var(--gc-text-3); }
+.section-directory-heading h3 { margin: 0; padding-top: 0; border-top: none; font-size: 1rem; font-weight: 600; }
+.section-directory-heading span { font-size: 12.5px; color: var(--vp-text-3); }
 .section-link-list { list-style: none; margin: 0; padding: 0; }
 .section-link-list-index { display: none; }
 .section-link-list-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--gc-text);
+  color: var(--vp-text-1);
   text-decoration: none;
 }
 .section-link-list-copy { flex: 1 1 auto; min-width: 0; }
-.section-link-list-title { font-weight: 600; color: var(--gc-text); }
+.section-link-list-title { font-weight: 600; color: var(--vp-text-1); }
 .section-link-list-summary {
   display: block;
   margin-top: 3px;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--gc-text-2);
+  color: var(--vp-text-2);
 }
-.section-link-list-meta { flex: 0 0 auto; font-size: 12.5px; color: var(--gc-text-3); white-space: nowrap; }
-.section-link-list-arrow { flex: 0 0 auto; color: var(--gc-text-3); }
-.section-link-list-link:hover .section-link-list-arrow { color: var(--gc-accent); }
-/* 专题：两列卡片 */
-.section-link-list--topics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.section-link-list-meta { flex: 0 0 auto; font-size: 12.5px; color: var(--vp-text-3); white-space: nowrap; }
+.section-link-list-arrow { flex: 0 0 auto; color: var(--vp-text-3); }
+.section-link-list-link:hover .section-link-list-arrow { color: var(--vp-brand-1); }
+/* 专题：软底卡片（同首页 features） */
+.section-link-list--topics { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .section-link-list--topics .section-link-list-link {
   height: 100%;
-  padding: 18px;
-  border: 1px solid var(--gc-border);
-  border-radius: 10px;
-  background: var(--gc-bg);
+  padding: 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--vp-bg-soft);
 }
-.section-link-list--topics .section-link-list-link:hover {
-  border-color: var(--gc-border-strong);
-  background: var(--gc-surface);
-}
+.section-link-list--topics .section-link-list-link:hover { background: var(--vp-card-hover); }
 /* 条目：朴素分隔行 */
 .section-link-list--entries .section-link-list-link {
   padding: 11px 8px;
-  border-bottom: 1px solid var(--gc-border);
+  border-bottom: 1px solid var(--vp-divider);
   border-radius: 0;
 }
-.section-link-list--entries .section-link-list-link:hover { background: var(--gc-hover); }
+.section-link-list--entries .section-link-list-link:hover { background: var(--vp-bg-soft); }
 .section-link-list--entries .section-link-list-title { font-weight: 500; }
 
 /* ============ 11. 页脚 / 上下篇 / 反馈 ============ */
 .book-footer {
   margin-top: 56px;
   padding-top: 24px;
-  border-top: 1px solid var(--gc-border);
+  border-top: 1px solid var(--vp-divider);
   font-size: 13px;
-  color: var(--gc-text-2);
+  color: var(--vp-text-2);
 }
 .goclub-footer-meta {
   display: flex;
@@ -832,30 +952,33 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   justify-content: space-between;
   gap: 10px 20px;
 }
-.book-footer a { color: var(--gc-text-2); }
-.book-footer a:hover { color: var(--gc-accent); }
+.book-footer a { color: var(--vp-text-2); }
+.book-footer a:hover { color: var(--vp-brand-1); }
+/* 上一篇/下一篇：VitePress pager 式双栏链接块 */
 .goclub-prev-next {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   margin-top: 24px;
 }
 .goclub-prev-next-link {
-  flex: 1 1 0;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  border: 1px solid var(--gc-border);
-  border-radius: 10px;
-  color: var(--gc-text);
+  border: 1px solid var(--vp-divider);
+  border-radius: 8px;
+  color: var(--vp-text-1);
   text-decoration: none;
 }
-.goclub-prev-next-link:hover { border-color: var(--gc-border-strong); background: var(--gc-surface); }
+.goclub-prev-next-link:hover { border-color: var(--vp-brand); }
+.goclub-prev-next-link:hover .goclub-prev-next-title { color: var(--vp-brand-1); }
 .goclub-prev-next-link--next { justify-content: flex-end; text-align: right; }
-.goclub-prev-next-arrow { color: var(--gc-text-3); font-size: 16px; }
+.goclub-prev-next-link--next:only-child { grid-column: 2; }
+.goclub-prev-next-arrow { color: var(--vp-text-3); font-size: 16px; }
 .goclub-prev-next-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.goclub-prev-next-eyebrow { font-size: 12px; color: var(--gc-text-3); }
-.goclub-prev-next-title { font-weight: 600; font-size: 14.5px; }
+.goclub-prev-next-eyebrow { font-size: 12px; color: var(--vp-text-3); }
+.goclub-prev-next-title { font-weight: 500; font-size: 14px; }
 .goclub-feedback {
   display: flex;
   flex-wrap: wrap;
@@ -863,27 +986,33 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   justify-content: space-between;
   gap: 14px 24px;
   margin-top: 32px;
-  padding: 20px;
-  border: 1px solid var(--gc-border);
-  border-radius: 10px;
-  background: var(--gc-surface);
+  padding: 24px;
+  border: none;
+  border-radius: 12px;
+  background: var(--vp-bg-soft);
 }
-.goclub-feedback-kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: var(--gc-text-3); }
-.goclub-feedback-copy h2 { margin: 6px 0; font-size: 1.0625rem; font-weight: 600; }
-.goclub-feedback-copy p { margin: 0; color: var(--gc-text-2); font-size: 14px; line-height: 1.65; max-width: 520px; }
+.goclub-feedback-kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: var(--vp-text-3); }
+.goclub-feedback-copy h2 {
+  margin: 6px 0;
+  padding-top: 0;
+  border-top: none;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+.goclub-feedback-copy p { margin: 0; color: var(--vp-text-2); font-size: 14px; line-height: 1.65; max-width: 520px; }
 .goclub-feedback-button {
   flex: 0 0 auto;
   padding: 8px 16px;
-  border: 1px solid var(--gc-border-strong);
+  border: 1px solid var(--vp-divider);
   border-radius: 8px;
-  background: var(--gc-bg);
-  color: var(--gc-text) !important;
+  background: var(--vp-bg);
+  color: var(--vp-text-1) !important;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none !important;
 }
-.goclub-feedback-button:hover { background: var(--gc-hover); }
-.book-copyright { margin-top: 20px; color: var(--gc-text-3); font-size: 12.5px; }
+.goclub-feedback-button:hover { background: var(--vp-bg-soft); }
+.book-copyright { margin-top: 20px; color: var(--vp-text-3); font-size: 12.5px; }
 
 /* ============ 12. 贡献者 ============ */
 .contributors-section { margin-top: 44px; }
@@ -893,14 +1022,20 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   justify-content: space-between;
   margin-bottom: 14px;
 }
-.contributors-heading h2 { margin: 0; font-size: 1.25rem; font-weight: 600; }
-.contributors-heading span { font-size: 13px; color: var(--gc-text-3); }
+.contributors-heading h2 {
+  margin: 0;
+  padding-top: 0;
+  border-top: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.contributors-heading span { font-size: 13px; color: var(--vp-text-3); }
 .contributors-list { list-style: none; margin: 0; padding: 0; }
 .contributor-row {
   display: flex;
   gap: 16px;
   padding: 16px 4px;
-  border-bottom: 1px solid var(--gc-border);
+  border-bottom: 1px solid var(--vp-divider);
 }
 .contributor-avatar-link { position: relative; flex: 0 0 auto; width: 44px; height: 44px; }
 .contributor-avatar,
@@ -914,40 +1049,40 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gc-active);
-  color: var(--gc-text-2);
+  background: var(--vp-bg-soft-hover);
+  color: var(--vp-text-2);
   font-weight: 600;
   text-transform: uppercase;
 }
 .contributor-body { min-width: 0; }
 .contributor-name { margin: 0; font-size: 15px; font-weight: 600; }
-.contributor-name a { color: var(--gc-text); }
+.contributor-name a { color: var(--vp-text-1); }
 .contributor-role, .contributor-fullname, .contributor-meta {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--gc-text-2);
+  color: var(--vp-text-2);
 }
-.contributor-meta a { color: var(--gc-accent); }
+.contributor-meta a { color: var(--vp-brand-1); }
 
 /* ============ 13. 内容页内嵌组件（书籍 / 岗位表 / 问答 / 聊天） ============ */
 .qa-answer {
   margin: 12px 0;
-  border: 1px solid var(--gc-border);
+  border: 1px solid var(--vp-divider);
   border-radius: 8px;
-  background: var(--gc-surface);
+  background: var(--vp-bg-soft);
 }
 .qa-answer-toggle {
   padding: 10px 14px;
   font-weight: 600;
   font-size: 14px;
-  color: var(--gc-accent);
+  color: var(--vp-brand-1);
   cursor: pointer;
 }
 .qa-answer-body { padding: 0 14px 12px; }
 .epub-book-hero, .section-card, .goclub-nav-card {
-  border: 1px solid var(--gc-border);
-  border-radius: 10px;
-  background: var(--gc-bg);
+  border: 1px solid var(--vp-divider);
+  border-radius: 12px;
+  background: var(--vp-bg);
   padding: 20px;
 }
 .section-card-grid, .contributors-grid {
@@ -958,52 +1093,54 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
 .section-card { display: flex; flex-direction: column; gap: 6px; }
 .section-card-kind, .page-lead-chip, .page-lead-badge {
   align-self: flex-start;
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--gc-accent-soft);
-  color: var(--gc-accent);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--vp-brand-soft);
+  color: var(--vp-brand-1);
   font-size: 12px;
   font-weight: 600;
 }
-.section-card-title, .goclub-nav-card-title { font-weight: 600; color: var(--gc-text); }
+.section-card-title, .goclub-nav-card-title { font-weight: 600; color: var(--vp-text-1); }
 .section-card-summary, .section-card-meta, .goclub-nav-card-meta,
-.epub-book-note, .pdf-ebook-note { color: var(--gc-text-2); font-size: 14px; line-height: 1.65; }
-.section-card-arrow { color: var(--gc-text-3); }
-.epub-cover-image, .pdf-page-image { border-radius: 8px; border: 1px solid var(--gc-border); }
+.epub-book-note, .pdf-ebook-note { color: var(--vp-text-2); font-size: 14px; line-height: 1.65; }
+.section-card-arrow { color: var(--vp-text-3); }
+.epub-cover-image, .pdf-page-image { border-radius: 8px; border: 1px solid var(--vp-divider); }
 .epub-download-link, .homepage-github-button {
   display: inline-flex;
-  padding: 8px 16px;
+  align-items: center;
+  height: 38px;
+  padding: 0 18px;
   border-radius: 8px;
-  background: var(--gc-text);
-  color: var(--gc-bg) !important;
+  background: var(--vp-brand);
+  color: #fff !important;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none !important;
 }
-.epub-download-link:hover, .homepage-github-button:hover { opacity: 0.85; }
-.pdf-page-label { font-size: 12.5px; color: var(--gc-text-3); }
+.epub-download-link:hover, .homepage-github-button:hover { background: var(--vp-brand-hover); }
+.pdf-page-label { font-size: 12.5px; color: var(--vp-text-3); }
 .hero-metrics, .section-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
 .hero-metric, .section-stat {
   flex: 1 1 120px;
   padding: 14px 16px;
-  border: 1px solid var(--gc-border);
-  border-radius: 10px;
-  background: var(--gc-bg);
+  border: 1px solid var(--vp-divider);
+  border-radius: 12px;
+  background: var(--vp-bg);
 }
 .hero-metric-value, .section-stat-value { display: block; font-size: 1.25rem; font-weight: 700; }
-.hero-metric-label, .section-stat-label { font-size: 12.5px; color: var(--gc-text-2); }
-.goclub-nav-card { display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: var(--gc-text); }
-.goclub-nav-card:hover { border-color: var(--gc-border-strong); background: var(--gc-surface); }
-.goclub-nav-card-label { font-size: 12px; color: var(--gc-text-3); }
-.job-table-scroll { overflow-x: auto; border: 1px solid var(--gc-border); border-radius: 10px; }
+.hero-metric-label, .section-stat-label { font-size: 12.5px; color: var(--vp-text-2); }
+.goclub-nav-card { display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: var(--vp-text-1); }
+.goclub-nav-card:hover { border-color: var(--gc-border-strong); background: var(--vp-bg-soft); }
+.goclub-nav-card-label { font-size: 12px; color: var(--vp-text-3); }
+.job-table-scroll { overflow-x: auto; border: 1px solid var(--vp-divider); border-radius: 12px; }
 .job-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.job-table th, .job-table td { padding: 9px 12px; border-bottom: 1px solid var(--gc-border); text-align: left; }
-.job-table th { background: var(--gc-surface); font-weight: 600; }
-.job-pagination { display: flex; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--gc-text-2); }
+.job-table th, .job-table td { padding: 9px 12px; border-bottom: 1px solid var(--vp-divider); text-align: left; }
+.job-table th { background: var(--vp-bg-soft); font-weight: 600; }
+.job-pagination { display: flex; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--vp-text-2); }
 .goclub-chatbot {
-  border: 1px solid var(--gc-border);
+  border: 1px solid var(--vp-divider);
   border-radius: 12px;
-  background: var(--gc-bg);
+  background: var(--vp-bg);
   overflow: hidden;
 }
 .goclub-chatbot-header {
@@ -1011,86 +1148,92 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--gc-border);
+  border-bottom: 1px solid var(--vp-divider);
   font-weight: 600;
 }
 .goclub-chatbot-messages { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .goclub-chatbot-msg {
   max-width: 85%;
   padding: 9px 13px;
-  border-radius: 10px;
-  background: var(--gc-surface);
+  border-radius: 8px;
+  background: var(--vp-bg-soft);
   line-height: 1.6;
   font-size: 14px;
 }
-.goclub-chatbot-msg.user { align-self: flex-end; background: var(--gc-accent-soft); }
+.goclub-chatbot-msg.user { align-self: flex-end; background: var(--vp-brand-soft); }
 .goclub-chatbot-input-area {
   display: flex;
   gap: 8px;
   padding: 12px;
-  border-top: 1px solid var(--gc-border);
+  border-top: 1px solid var(--vp-divider);
 }
 .goclub-chatbot-input {
   flex: 1 1 auto;
   padding: 9px 12px;
-  border: 1px solid var(--gc-border);
+  border: 1px solid var(--vp-divider);
   border-radius: 8px;
-  background: var(--gc-bg);
-  color: var(--gc-text);
+  background: var(--vp-bg);
+  color: var(--vp-text-1);
   font-size: 14px;
 }
-.goclub-chatbot-input:focus { outline: none; border-color: var(--gc-accent); }
+.goclub-chatbot-input:focus { outline: none; border-color: var(--vp-brand-1); }
 .goclub-chatbot-send {
   padding: 9px 16px;
   border: none;
   border-radius: 8px;
-  background: var(--gc-accent);
+  background: var(--vp-brand);
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
 }
+.goclub-chatbot-send:hover { background: var(--vp-brand-hover); }
 .goclub-chatbot-presets { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 12px; }
 .goclub-chatbot-preset {
   padding: 4px 11px;
-  border: 1px solid var(--gc-border);
-  border-radius: 999px;
-  background: var(--gc-bg);
-  color: var(--gc-text-2);
+  border: 1px solid var(--vp-divider);
+  border-radius: 6px;
+  background: var(--vp-bg);
+  color: var(--vp-text-2);
   font-size: 12.5px;
   cursor: pointer;
 }
-.goclub-chatbot-preset:hover { border-color: var(--gc-accent); color: var(--gc-accent); }
+.goclub-chatbot-preset:hover { border-color: var(--vp-brand-1); color: var(--vp-brand-1); }
 .goclub-chatbot-settings-panel input {
   padding: 8px 11px;
-  border: 1px solid var(--gc-border);
+  border: 1px solid var(--vp-divider);
   border-radius: 8px;
-  background: var(--gc-bg);
-  color: var(--gc-text);
+  background: var(--vp-bg);
+  color: var(--vp-text-1);
 }
-.goclub-chatbot-settings-panel input:focus { outline: none; border-color: var(--gc-accent); }
+.goclub-chatbot-settings-panel input:focus { outline: none; border-color: var(--vp-brand-1); }
 
 /* ============ 14. 移动端 ============ */
 @media screen and (max-width: 56rem) {
+  .goclub-topbar-inner { padding: 0 16px; }
   .goclub-topbar-btn { display: flex; }
   .goclub-topbar-search {
-    min-width: 0;
-    padding: 8px;
-    border-color: transparent;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
     background: none;
   }
+  .goclub-topbar-search:hover { background: var(--vp-bg-soft); }
   .goclub-topbar-search-text, .goclub-topbar-kbd { display: none; }
   .goclub-topbar-github-text { display: none; }
   .goclub-topbar-github { padding: 8px; }
   .book-menu .book-menu-content { top: var(--gc-topbar-h); }
   .sidebar-toggle, .sidebar-resizer { display: none; }
-  .book-page { padding: 24px 16px 48px; }
+  .book-page { padding: 24px 16px 64px; }
   .home-title { font-size: 2rem; }
+  .home-subtitle { font-size: 1.0625rem; }
   .home-grid, .section-link-list--topics { grid-template-columns: 1fr; }
   .page-lead-title { font-size: 1.625rem; }
-  .goclub-prev-next { flex-direction: column; }
-  .book-search.is-expanded { top: 12px; max-height: calc(100vh - 24px); padding: 16px; }
-  /* 移动端本页目录：顶栏下方浮层面板 */
+  .goclub-prev-next { grid-template-columns: 1fr; }
+  .goclub-prev-next-link--next:only-child { grid-column: auto; }
+  .book-search.is-expanded { top: 12px; max-height: calc(100vh - 24px); padding: 16px 16px 8px; }
+  /* 移动端本页目录：顶栏下方实色面板 */
   #toc-control:checked ~ main .book-header aside {
     position: fixed;
     top: calc(var(--gc-topbar-h) + 8px);
@@ -1100,9 +1243,9 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
     max-height: 62vh;
     overflow-y: auto;
     padding: 16px;
-    border: 1px solid var(--gc-border);
+    border: 1px solid var(--vp-divider);
     border-radius: 12px;
-    background: var(--gc-bg);
+    background: var(--vp-bg);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
   .book-header aside nav ul { list-style: none; margin: 0; padding: 0; }
@@ -1110,10 +1253,10 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--gc-accent); }
   .book-header aside nav a {
     display: block;
     padding: 5px 0;
-    color: var(--gc-text-2);
+    color: var(--vp-text-2);
     font-size: 14px;
   }
-  .book-header aside nav a:hover { color: var(--gc-accent); }
+  .book-header aside nav a:hover { color: var(--vp-brand-1); }
 }
 @media screen and (max-width: 30rem) {
   .book-brand-tag { display: none; }
