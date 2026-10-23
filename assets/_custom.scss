@@ -194,6 +194,8 @@ main.container {
   z-index: 50;
   background: var(--vp-bg);
   border-bottom: 1px solid var(--vp-divider);
+  /* 导航栏字体与首页大字标同款 Fredoka（拉丁字形）；中文自动回退 PingFang 等黑体 */
+  font-family: Fredoka, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 .goclub-topbar-inner {
   display: flex;
@@ -218,7 +220,7 @@ main.container {
 /* 品牌标：本站原创 logo（static/logo.svg；用户 2026-10-23 定稿候选 2 气泡+Go） */
 .book-brand-logo { display: block; width: 30px; height: 30px; flex: 0 0 auto; }
 /* VP 顶栏为单行站名（16px/600），无副标题行 */
-.book-brand-name { font-size: 16px; font-weight: 600; color: var(--vp-text-1); white-space: nowrap; }
+.book-brand-name { font-family: Fredoka, "PingFang SC", "Hiragino Sans GB", sans-serif; font-size: 19px; font-weight: 600; letter-spacing: .01em; color: var(--vp-text-1); white-space: nowrap; }
 /* 品牌标为 Gemini 渐变气泡：深色顶栏下轻提亮，避免贴近黑底看不清 */
 :root[data-theme="dark"] .book-brand-logo { filter: brightness(1.12) saturate(1.05); }
 @media (prefers-color-scheme: dark) {

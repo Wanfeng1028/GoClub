@@ -1,11 +1,9 @@
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19d48c9b-1602-4bc0-ad04-9f819006ec0b"></script>
 
-{{/* Fredoka（BotsRouter 同款品牌 display 字）只给首页大字标用，其他页不引 */}}
-{{ if .IsHome }}
+{{/* Fredoka（BotsRouter 同款品牌 display 字）：全站引入——首页大字标 + 导航栏品牌字都用它（用户 2026-10-23 亲定） */}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
-{{ end }}
 
 <script>
   (function() {
