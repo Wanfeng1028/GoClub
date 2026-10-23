@@ -95,6 +95,11 @@
         <a class="home-link" href="{{ $githubURL }}" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
       </nav>
     </section>
+
+    {{/* 项目声明（常驻小字，用户 2026-10-23 亲定）：与欢迎弹窗同文，弹窗关掉后这行声明一直在首页底部 */}}
+    <section class="home-declaration" aria-label="项目声明">
+      <p>本项目 fork 自 <a href="https://github.com/LeoninCS/GoClub" target="_blank" rel="noopener noreferrer">LeoninCS/GoClub</a>，前端基于 Hugo 文档框架重新设计，并与上游内容保持自动同步更新。社区共建，开源免费。</p>
+    </section>
   </article>
 
   {{/* 欢迎弹窗（用户 2026-10-23 亲定）：首次进入首页时弹出，说明项目来源、前端框架与同步机制；关闭后记本地，不再反复打扰 */}}

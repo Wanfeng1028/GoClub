@@ -1181,6 +1181,23 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .home-join-text { margin: 0 auto; max-width: 560px; font-size: 15px; line-height: 26px; color: var(--vp-text-2); }
 .home-join .home-links { margin-top: 16px; }
 
+/* 项目声明：首页底部常驻小字（与欢迎弹窗同文），细线分隔、居中、两行内 */
+.home-declaration {
+  max-width: 720px;
+  margin: 56px auto 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--vp-divider);
+  text-align: center;
+}
+.home-declaration p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--vp-text-3);
+}
+.home-declaration a { color: var(--vp-brand-1); font-weight: 600; text-decoration: none; }
+.home-declaration a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
 /* 欢迎弹窗：仅首页；纯色遮罩（不用磨砂），卡片大圆角，入场淡入上浮 */
 .welcome-modal {
   position: fixed;
