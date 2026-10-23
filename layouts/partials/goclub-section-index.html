@@ -15,23 +15,15 @@
 {{ $pageCount := len $pages }}
 {{ $itemCount := add $sectionCount $pageCount }}
 {{ $isMixed := and (gt $sectionCount 0) (gt $pageCount 0) }}
-{{ $indexTitle := "内容目录" }}
-{{ if and (gt $sectionCount 0) (eq $pageCount 0) }}
-  {{ $indexTitle = "专题与分类" }}
-{{ else if and (gt $pageCount 0) (eq $sectionCount 0) }}
-  {{ $indexTitle = "文章与资料" }}
-{{ end }}
 
 {{ if gt $itemCount 0 }}
-  <nav class="section-index-shell section-directory" aria-labelledby="section-directory-title">
-    <h2 class="section-index-heading" id="section-directory-title">{{ $indexTitle }}</h2>
-
+  <nav class="section-index-shell section-directory" aria-label="内容目录">
     {{ if gt $sectionCount 0 }}
       <div class="section-directory-group">
         {{ if $isMixed }}
           <h3 class="section-directory-heading" id="section-topics-title">专题与分类</h3>
         {{ end }}
-        <ol class="section-link-list section-link-list--topics section-link-list--count-{{ $sectionCount }}" aria-label="专题与分类">
+        <ol class="section-link-list section-link-list--entries section-link-list--count-{{ $sectionCount }}" aria-label="专题与分类">
           {{ range $sections }}
             {{ $itemSummary := partial "goclub/lead-summary.html" . }}
             <li class="section-link-list-item">

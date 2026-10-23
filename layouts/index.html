@@ -14,16 +14,21 @@
 
   <article class="markdown book-article home-article">
     <section class="home-hero">
-      <h1 class="home-hero-name">GoClub</h1>
-      <p class="home-hero-text">Go 面试知识库</p>
-      <p class="home-hero-tagline">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。面经可以先用 AI 整理，再通过 Issue 表单投稿；其他内容和纠错也欢迎提 PR。</p>
-      <nav class="home-actions" aria-label="快速操作">
-        {{ with $submitPage }}
-          <a class="home-btn home-btn-primary" href="{{ .RelPermalink }}">面经投稿流程</a>
-        {{ end }}
-        <a class="home-btn" href="{{ $interviewSubmissionURL }}" target="_blank" rel="noopener noreferrer">提交面经</a>
-        <a class="home-btn" href="{{ $githubURL }}" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
-      </nav>
+      <div class="home-hero-main">
+        <h1 class="home-hero-name">GoClub</h1>
+        <p class="home-hero-text">Go 面试知识库</p>
+        <p class="home-hero-tagline">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。面经可以先用 AI 整理，再通过 Issue 表单投稿；其他内容和纠错也欢迎提 PR。</p>
+        <nav class="home-actions" aria-label="快速操作">
+          {{ with $submitPage }}
+            <a class="home-btn home-btn-primary" href="{{ .RelPermalink }}">面经投稿流程</a>
+          {{ end }}
+          <a class="home-btn" href="{{ $interviewSubmissionURL }}" target="_blank" rel="noopener noreferrer">提交面经</a>
+          <a class="home-btn" href="{{ $githubURL }}" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </nav>
+      </div>
+      <div class="home-hero-image">
+        <img class="home-hero-logo" src="{{ "logo.svg" | relURL }}" alt="GoClub 标志" width="320" height="320">
+      </div>
     </section>
 
     <section class="home-sections" aria-label="全部栏目">

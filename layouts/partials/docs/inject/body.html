@@ -211,5 +211,48 @@
   })();
 </script>
 
+<script>
+  (function () {
+    // 右侧大纲滚动高亮（VP outline-marker 的等效实现）：
+    // 当前标题对应的大纲链接加 .active（品牌色标记段由 CSS ::before 绘制）。
+    var toc = document.querySelector('.book-toc-content nav');
+    if (!toc) return;
+    var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+    if (!links.length) return;
+    var byId = {};
+    links.forEach(function (a) {
+      byId[decodeURIComponent(a.getAttribute('href').slice(1))] = a;
+    });
+    var heads = Object.keys(byId)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+    if (!heads.length) return;
+    var current = null;
+    function setActive(id) {
+      if (current === id) return;
+      current = id;
+      links.forEach(function (a) { a.classList.remove('active'); });
+      if (id && byId[id]) byId[id].classList.add('active');
+    }
+    // 激活规则与 VP 一致的观感：最后一个越过「顶栏高 + 32px」线的标题为当前节。
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var line = 64 + 32;
+      var id = heads.length ? heads[0].id : null;
+      for (var i = 0; i < heads.length; i++) {
+        if (heads[i].getBoundingClientRect().top <= line) id = heads[i].id;
+        else break;
+      }
+      setActive(id);
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+</script>
+
 {{ partial "goclub/umami-stats.html" . }}
 {{ partial "goclub/share-shortlink.html" . }}

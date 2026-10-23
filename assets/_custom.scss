@@ -174,6 +174,7 @@ main.container {
   max-width: var(--vp-layout-max-width);
   margin-inline: auto;
   width: 100%;
+  padding: 0; /* 主题 .container 的 1rem 顶 padding 会把正文起点压到 VP 公式之外 */
 }
 
 /* ============ 3. 顶栏（64px 实色，无 blur） ============ */
@@ -205,18 +206,8 @@ main.container {
   text-decoration: none;
   min-width: 0;
 }
-.book-brand-mark {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--vp-brand);
-  color: #fff;
-}
-.book-brand-mark svg { width: 18px; height: 18px; }
+/* 品牌标：本站原创 logo（static/logo.svg，自带圆角方形底与配色） */
+.book-brand-logo { display: block; width: 30px; height: 30px; flex: 0 0 auto; }
 .book-brand-copy { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
 .book-brand-name { font-size: 16px; font-weight: 600; color: var(--vp-text-1); white-space: nowrap; }
 /* VP 顶栏标题为单行站名，不带副标题 */
@@ -264,18 +255,47 @@ main.container {
   font-family: inherit;
   line-height: 1.5;
 }
-.goclub-topbar-github {
+/* 顶栏菜单行（VPNavMenu 规格：14px/500、链接内边距 0 12px、行高=顶栏高） */
+.goclub-topbar-nav { display: none; }
+@media screen and (min-width: 60rem) {
+  .goclub-topbar-nav { display: flex; align-items: stretch; margin-left: 24px; }
+  .goclub-topbar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--vp-text-1);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .goclub-topbar-nav a:hover { color: var(--vp-brand-1); }
+  .goclub-topbar-nav a.active { color: var(--vp-brand-1); }
+}
+/* 顶栏竖分隔线（VP nav 的 controls 分隔） */
+.goclub-topbar-divider {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 1px;
+  height: 24px;
+  margin: 0 2px 0 10px;
+  background: var(--vp-divider);
+}
+@media screen and (max-width: 59.99rem) {
+  .goclub-topbar-divider { display: none; }
+}
+/* GitHub 社交图标：VP socials 形态，纯图标 20px、无文字 */
+.goclub-topbar .goclub-topbar-github {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 10px;
+  justify-content: center;
+  padding: 8px;
   border-radius: 6px;
   color: var(--vp-text-2);
-  font-size: 13px;
-  font-weight: 500;
   text-decoration: none;
 }
-.goclub-topbar-github:hover { color: var(--vp-text-1); }
+.goclub-topbar .goclub-topbar-github:hover { color: var(--vp-text-1); }
+.goclub-topbar-github svg { width: 20px; height: 20px; }
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -371,6 +391,7 @@ main.container {
   .book-menu .book-menu-content {
     width: var(--vp-sidebar-w);
     border-right: none;
+    top: var(--gc-topbar-h); /* 钉死在顶栏下方（主题 fixed top 会被其它规则压成 1rem） */
   }
   /* ≥1440：侧栏灰底向左延展到视口边缘（VP ≥1440 的 sidebar 宽度公式等效效果） */
   @media screen and (min-width: 90rem) {
@@ -618,8 +639,9 @@ body.search-overlay-open { overflow: hidden; }
   max-width: var(--gc-article-w); /* 688px = VP .content-container */
   margin-inline: auto;
 }
+/* 栏目页正文列与文章页一致 = VP 文档列 688px（不再用 1024 宽列） */
 body.book-kind-section .book-page > .book-article,
-body.book-kind-section .book-page > .book-footer { max-width: var(--gc-wide-w); }
+body.book-kind-section .book-page > .book-footer { max-width: var(--gc-article-w); }
 /* 首页：无侧栏，全宽走 VP home 的两侧留白（24 / 48 / 64） */
 body.book-kind-home .book-page { padding: 0 24px 64px; }
 @media screen and (min-width: 40rem) {
@@ -658,6 +680,7 @@ body.book-kind-home .book-page > .book-footer { max-width: none; }
 .book-toc nav li { margin: 0; }
 .book-toc nav a {
   display: block;
+  position: relative;
   padding: 0 0 0 16px;
   color: var(--vp-text-2);
   font-size: 13px;
@@ -666,6 +689,18 @@ body.book-kind-home .book-page > .book-footer { max-width: none; }
 }
 .book-toc nav ul ul a { padding-left: 29px; }
 .book-toc nav a:hover { color: var(--vp-text-1); opacity: 1; }
+/* 滚动高亮（VP outline-marker 等效）：激活链接变 text-1，左边线压一枚品牌色标记段 */
+.book-toc nav a.active { color: var(--vp-text-1); }
+.book-toc nav a.active::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 18px;
+  background: var(--vp-brand-1);
+}
 
 /* ============ 7. 正文排版（VitePress vp-doc 近似） ============ */
 .markdown { line-height: 1.7; font-size: 1rem; color: var(--vp-text-1); }
@@ -727,6 +762,8 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 
 /* ============ 8. 页首（文章 / 栏目） ============ */
 .page-lead { margin-bottom: 32px; }
+/* 主题 .markdown h1{margin-top:1.5em} 特异性更高，会把页首标题顶下去 48px 并折叠穿透到文章框，VP 正文起点公式被破坏 */
+.markdown .page-lead-title { margin-top: 0; }
 .page-lead-title {
   margin: 0 0 12px;
   font-size: 2rem;
@@ -783,10 +820,40 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .goclub-share-url { color: var(--vp-text-3); font-size: 12px; }
 
 /* ============ 9. 首页（VPHero + VPFeatures 规格） ============ */
-/* VPHero: padding calc(nav+48) 24 48 → ≥640: calc(nav+80) 48 64；本站顶栏已占位，故用 48 / 80 */
-.home-hero { padding: 48px 0 64px; text-align: center; }
+/* VPHero（has-image 形态）: padding calc(nav+48) 24 48 → ≥640: calc(nav+80) 48 64；本站顶栏已占位，故用 48 / 80。
+   左文右图（≥960 横排），name 纯色（用户禁蓝紫渐变），右侧只放本站 logo 本体、无光晕垫底。 */
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 48px 0 64px;
+}
 @media screen and (min-width: 40rem) {
   .home-hero { padding-top: 80px; }
+}
+@media screen and (min-width: 60rem) {
+  .home-hero {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 64px;
+  }
+  .home-hero-main { flex: 1 1 auto; min-width: 0; max-width: 640px; }
+}
+.home-hero-image {
+  order: -1;
+  display: flex;
+  justify-content: center;
+}
+@media screen and (min-width: 60rem) {
+  .home-hero-image { order: 0; flex: 0 0 auto; }
+}
+.home-hero-logo { display: block; width: 168px; height: 168px; }
+@media screen and (min-width: 40rem) {
+  .home-hero-logo { width: 240px; height: 240px; }
+}
+@media screen and (min-width: 60rem) {
+  .home-hero-logo { width: 320px; height: 320px; }
 }
 .home-hero .home-hero-name {
   margin: 0;
@@ -794,14 +861,10 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   font-weight: 700;
   letter-spacing: -0.4px;
   line-height: 40px;
-  background: linear-gradient(-45deg, #42d392, #647eff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--vp-text-1);
 }
 .home-hero .home-hero-text {
-  margin: 0 auto;
+  margin: 0;
   max-width: 392px;
   font-size: 32px;
   font-weight: 700;
@@ -810,7 +873,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   color: var(--vp-text-1);
 }
 .home-hero .home-hero-tagline {
-  margin: 0 auto;
+  margin: 0;
   max-width: 392px;
   padding-top: 8px;
   font-size: 18px;
@@ -823,10 +886,14 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   .home-hero .home-hero-text { max-width: 576px; font-size: 48px; line-height: 56px; }
   .home-hero .home-hero-tagline { max-width: 576px; padding-top: 12px; font-size: 20px; line-height: 32px; }
 }
+@media screen and (min-width: 60rem) {
+  .home-hero .home-hero-name { font-size: 56px; line-height: 64px; }
+  .home-hero .home-hero-text { font-size: 56px; line-height: 64px; }
+}
 .home-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 12px;
   padding-top: 24px;
 }
@@ -903,21 +970,18 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 }
 .home-card-meta { display: block; margin-top: 12px; font-size: 13px; color: var(--vp-text-3); }
 
-/* ============ 10. 栏目索引（VP 文档式：h2 分节 + 带描述的链接列表 / features 卡片） ============ */
+/* ============ 10. 栏目索引（VP 正文式：无自创索引大标题，前言后直接是带摘要的链接列表） ============ */
 .section-index-shell { margin-top: 8px; }
-/* 分组标题 = vp-doc h2 规格 */
-.section-index-heading,
+/* 混合栏目（子栏目+文章并存）时的分组小标题：纯文字小节标，不带分隔线 */
 .section-directory-heading {
-  margin: 48px 0 16px;
-  padding-top: 24px;
-  border-top: 1px solid var(--vp-divider);
-  font-size: 24px;
+  margin: 40px 0 4px;
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 32px;
+  letter-spacing: -0.01em;
+  line-height: 24px;
   color: var(--vp-text-1);
 }
-.section-directory-group:first-child .section-directory-heading { margin-top: 32px; }
+.section-directory-group:first-child .section-directory-heading { margin-top: 24px; }
 .section-link-list { list-style: none; margin: 0; padding: 0; }
 .section-link-list-item { margin: 0; }
 .section-link-list-copy { display: block; min-width: 0; }
@@ -935,24 +999,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 }
 .section-link-list-link { display: block; text-decoration: none; }
 .section-link-list-link:hover .section-link-list-title { color: var(--vp-brand-1); }
-/* 子栏目 = VPFeature 卡片 */
-.section-link-list--topics {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-@media screen and (min-width: 40rem) {
-  .section-link-list--topics { grid-template-columns: 1fr 1fr; }
-}
-.section-link-list--topics .section-link-list-link {
-  height: 100%;
-  padding: 24px;
-  border: 1px solid var(--vp-bg-soft);
-  border-radius: 12px;
-  background: var(--vp-bg-soft);
-}
-.section-link-list--topics .section-link-list-link:hover { background: var(--vp-card-hover); }
-/* 条目 = 带描述的分隔行（VP 文档索引式） */
+/* 子栏目与条目统一为带描述的分隔行（卡片只保留在首页 features） */
 .section-link-list--entries .section-link-list-item { border-bottom: 1px solid var(--vp-divider); }
 .section-link-list--entries .section-link-list-link { padding: 16px 0; }
 .section-link-list--entries .section-link-list-item:first-child .section-link-list-link { padding-top: 8px; }

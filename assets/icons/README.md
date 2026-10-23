@@ -7,7 +7,7 @@
 
 ## 品牌标
 
-站点品牌标（顶栏左上角原「GC」字标）已改为 Lucide `book-open`：原件在 `lucide/book-open.svg`，经 `goclub/icon` partial 内联到 `layouts/partials/docs/brand.html` 的 `.book-brand-mark`（品牌色 #646cff 底白图标）。标签页图标 `static/favicon.svg` 同为 book-open 图形（品牌色圆角方块+白色线条），PNG 版 `favicon.png` 保留作 apple-touch-icon 与旧浏览器兜底。
+站点品牌标是本站原创手绘 SVG（不是 Lucide 图标）：`static/logo.svg`——品牌蓝 `#3451b2` 圆角方形底 + 白色「G」形符号（圆弧缺口在右侧，横笔末端带向右箭头，寓意 Go 与向前）。顶栏品牌区（`layouts/partials/docs/brand.html`）以 `<img>` 引用该文件；首页 hero 右侧放大展示同一文件。标签页图标 `static/favicon.svg` 与 `static/favicon.png`（512px）均为同一新标。`lucide/book-open.svg` 仅保留给首页栏目卡片（八股总结）使用，不再充当品牌标。
 
 ## 首页栏目卡片图标
 
