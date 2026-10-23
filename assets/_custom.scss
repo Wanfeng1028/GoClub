@@ -1017,15 +1017,38 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   font-size: 12px;
   line-height: 18px;
 }
-/* hero 与共建区的文字链按钮：无底无框，hover 品牌色 + 下划线 */
+/* 操作行容器：hero 与共建区共用，居中成对排布 */
 .home-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 28px;
+  gap: 12px;
   margin-top: 24px;
 }
-.markdown a.home-link {
+/* hero 两个主操作：胶囊按钮（用户 2026-10-23 亲定）——主钮品牌蓝实心，次钮 soft 底 */
+.markdown .home-hero a.home-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: auto;
+  align-items: center;
+  gap: 7px;
+  height: 42px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: var(--vp-bg-soft);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--vp-text-1);
+  text-decoration: none;
+  transition: background-color .2s ease, color .2s ease;
+}
+.markdown .home-hero a.home-link:hover { background: var(--vp-bg-soft-hover); color: var(--vp-text-1); text-decoration: none; }
+.markdown .home-hero a.home-link-primary { background: var(--vp-brand-1); color: #fff; }
+.markdown .home-hero a.home-link-primary:hover { background: var(--vp-brand-2); color: #fff; }
+:root[data-theme="dark"] .markdown .home-hero a.home-link-primary { color: #fff; }
+/* 共建区仍是文字链：无底无框，hover 品牌色 + 下划线 */
+.markdown .home-join a.home-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1034,8 +1057,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   color: var(--vp-text-2);
   text-decoration: none;
 }
-.markdown a.home-link:hover { color: var(--vp-brand-1); text-decoration: underline; text-underline-offset: 4px; }
-.markdown a.home-link-primary { color: var(--vp-brand-1); }
+.markdown .home-join a.home-link:hover { color: var(--vp-brand-1); text-decoration: underline; text-underline-offset: 4px; }
 .home-link-icon { width: 15px; height: 15px; }
 
 /* 数据带：细线上下分隔，数字由模板实时计数 */
