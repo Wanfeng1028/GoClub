@@ -102,7 +102,7 @@
     </section>
   </article>
 
-  {{/* 欢迎弹窗（用户 2026-10-23 亲定）：首次进入首页时弹出，说明项目来源、前端框架与同步机制；关闭后记本地，不再反复打扰 */}}
+  {{/* 欢迎弹窗（用户 2026-10-23 亲定）：每次进入首页都弹出，说明项目来源、前端框架与同步机制；与底部常驻声明小字并存 */}}
   <div class="welcome-modal" id="welcome-modal" hidden role="dialog" aria-modal="true" aria-labelledby="welcome-title">
     <div class="welcome-backdrop" data-welcome-close></div>
     <div class="welcome-card">
@@ -116,21 +116,14 @@
   </div>
   <script>
     (function () {
-      var KEY = 'goclub-welcome-v1';
       var modal = document.getElementById('welcome-modal');
       if (!modal) return;
-      var seen = false;
-      try { seen = !!localStorage.getItem(KEY); } catch (e) {}
-      function close() {
-        modal.hidden = true;
-        try { localStorage.setItem(KEY, '1'); } catch (e) {}
-      }
-      if (!seen) {
-        setTimeout(function () {
-          modal.hidden = false;
-          requestAnimationFrame(function () { modal.classList.add('is-open'); });
-        }, 350);
-      }
+      function close() { modal.hidden = true; }
+      /* 每次进入首页都弹出（用户 2026-10-23 亲定：弹窗与底部小字声明两者都要常在，不做看过不再弹的记忆） */
+      setTimeout(function () {
+        modal.hidden = false;
+        requestAnimationFrame(function () { modal.classList.add('is-open'); });
+      }, 350);
       modal.addEventListener('click', function (e) {
         if (e.target.closest('[data-welcome-close]')) close();
       });
