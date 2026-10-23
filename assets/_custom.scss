@@ -219,10 +219,10 @@ main.container {
 .book-brand-logo { display: block; width: 30px; height: 30px; flex: 0 0 auto; }
 /* VP 顶栏为单行站名（16px/600），无副标题行 */
 .book-brand-name { font-size: 16px; font-weight: 600; color: var(--vp-text-1); white-space: nowrap; }
-/* 品牌标为品牌蓝单色字形：深色顶栏下提亮，避免蓝贴近黑底看不清 */
-:root[data-theme="dark"] .book-brand-logo { filter: brightness(1.55) saturate(1.05); }
+/* 品牌标为 Gemini 渐变气泡：深色顶栏下轻提亮，避免贴近黑底看不清 */
+:root[data-theme="dark"] .book-brand-logo { filter: brightness(1.12) saturate(1.05); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .book-brand-logo { filter: brightness(1.55) saturate(1.05); }
+  :root:not([data-theme="light"]) .book-brand-logo { filter: brightness(1.12) saturate(1.05); }
 }
 .goclub-topbar-spacer { flex: 1 1 auto; }
 .goclub-topbar a { flex: none; }

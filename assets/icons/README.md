@@ -7,7 +7,7 @@
 
 ## 品牌标
 
-站点品牌标是本站原创手绘 SVG（不是 Lucide 图标）。上一版「蓝方块白 G」已被否，当前 `static/logo.svg` 为用户 2026-10-23 挑定的**候选 2（对话气泡+Go）定稿**（先定候选 3，同日改定候选 2）；三候选原件与多尺寸自查图在工作区 `goclub-redesign/logo2/`。顶栏品牌区（`layouts/partials/docs/brand.html`）以 `<img>` 引用 `static/logo.svg`；首页 hero 右侧放大展示同一文件。标签页图标 `static/favicon.svg` 与 `static/favicon.png`（512px）与 favicon.svg 直接使用候选 2 本体（实心气泡自带底形）。`lucide/book-open.svg` 仅保留给首页栏目卡片（八股总结）使用，不再充当品牌标。
+站点品牌标是本站原创手绘 SVG（不是 Lucide 图标）。上一版「蓝方块白 G」已被否，当前 `static/logo.svg` 为用户 2026-10-23 挑定的**候选 2（对话气泡+Go）定稿**（先定候选 3，同日改定候选 2；同日再定气泡填充换全站同源的 Gemini 渐变 #3186ff→#346bf0→#4ea0ff）；三候选原件与多尺寸自查图在工作区 `goclub-redesign/logo2/`。顶栏品牌区（`layouts/partials/docs/brand.html`）以 `<img>` 引用 `static/logo.svg`；首页 hero 右侧放大展示同一文件。标签页图标 `static/favicon.svg` 与 `static/favicon.png`（512px）与 favicon.svg 直接使用候选 2 本体（实心气泡自带底形）。`lucide/book-open.svg` 仅保留给首页栏目卡片（八股总结）使用，不再充当品牌标。
 
 ## 首页栏目卡片图标
 
