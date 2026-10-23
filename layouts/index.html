@@ -16,9 +16,9 @@
     <section class="home-hero">
       <p class="home-eyebrow"><span class="home-eyebrow-dot" aria-hidden="true"></span>社区共建 · 开源免费</p>
       {{/* 大字标：定稿气泡 logo + Fredoka 600 艺术字（BotsRouter 同款品牌字），logo URL 带内容哈希防缓存 */}}
-      <p class="home-wordmark" aria-label="GoClub">
+      <p class="home-wordmark" aria-label="GoClub Pro">
         <img class="home-wordmark-logo" src="{{ printf "%s?v=%s" ("logo.svg" | relURL) (substr (sha256 (readFile "static/logo.svg")) 0 12) }}" alt="" aria-hidden="true">
-        <span class="home-wordmark-text" aria-hidden="true">GoClub</span>
+        <span class="home-wordmark-text" aria-hidden="true">GoClub Pro</span>
       </p>
       <h1 class="home-title">Go 后端面试知识库</h1>
       <p class="home-tagline">八股总结、面试真题、学习资源和配套文章，按栏目整理，社区一起维护。</p>
@@ -108,7 +108,7 @@
     <div class="welcome-card">
       <button class="welcome-close" type="button" aria-label="关闭" data-welcome-close>{{ partial "goclub/icon" (dict "name" "x" "class" "welcome-close-icon") }}</button>
       <img class="welcome-logo" src="{{ printf "%s?v=%s" ("logo.svg" | relURL) (substr (sha256 (readFile "static/logo.svg")) 0 12) }}" alt="" width="56" height="56" aria-hidden="true">
-      <h2 class="welcome-title" id="welcome-title">欢迎访问 GoClub</h2>
+      <h2 class="welcome-title" id="welcome-title">欢迎访问 GoClub Pro</h2>
       <p class="welcome-text">本项目 fork 自 <a href="https://github.com/LeoninCS/GoClub" target="_blank" rel="noopener noreferrer">LeoninCS/GoClub</a>，前端基于 Hugo 文档框架重新设计，并与上游内容保持自动同步更新。</p>
       <p class="welcome-text">社区共建，开源免费，欢迎访问！</p>
       <button class="welcome-cta" type="button" data-welcome-close>开始探索</button>

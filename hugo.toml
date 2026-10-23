@@ -1,6 +1,6 @@
 baseURL = 'https://goclub.space/'
 languageCode = 'zh-cn'
-title = 'GoClub'
+title = 'GoClub Pro'
 theme = 'hugo-book'
 
 disablePathToLower = true

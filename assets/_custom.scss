@@ -995,7 +995,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   color: var(--vp-text-1);
 }
 .home-wordmark-logo { width: 0.9em; height: 0.9em; flex: 0 0 auto; }
-.home-wordmark-text { line-height: 1.05; }
+.home-wordmark-text { line-height: 1.05; white-space: nowrap; }
 .home-hero .home-title {
   margin: 14px 0 0;
   font-size: 32px;

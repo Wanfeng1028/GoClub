@@ -1,3 +1,3 @@
 ---
-title: "GoClub"
+title: "GoClub Pro"
 ---
