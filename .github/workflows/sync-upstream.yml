@@ -1,0 +1,95 @@
+name: 同步上游更新
+
+# 为什么需要这个 workflow：
+#
+# 本仓库是 LeoninCS/GoClub 的 fork，前端（layouts/assets）是本站自己的，
+# 但内容应跟随上游：上游 main 有新提交时，自动 merge 进本站 main，
+# push 后由 Cloudflare Pages 自动重新构建部署，整条链路不用人守。
+#
+# 策略是普通 merge（不用 rebase、绝不 force push），本站的改版提交与
+# 上游的内容提交长期并存。一旦自动 merge 出现冲突，工作流会失败并
+# 在本仓开 issue 报警，留给人工处理，不静默吞掉。
+
+on:
+  schedule:
+    # 每天 UTC 22:17（北京时间次日 06:17），避开整点拥堵
+    - cron: "17 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: ${{ github.repository }}-sync-upstream
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_REPO: LeoninCS/GoClub
+  DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+
+jobs:
+  sync:
+    name: 合并上游并发布
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 检出本站 main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.repository.default_branch }}
+          submodules: recursive
+
+      - name: 合并上游 main
+        id: merge
+        shell: bash
+        run: |
+          git config user.name "Wanfeng1028"
+          git config user.email "wanfeng572@gmail.com"
+          git remote add upstream "https://github.com/$UPSTREAM_REPO.git"
+          git fetch upstream main
+
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "上游没有新提交，无需同步。"
+            exit 0
+          fi
+
+          echo "上游有新提交，开始合并："
+          git log --oneline HEAD..upstream/main | head -20
+
+          if git merge upstream/main -m "chore: 同步上游 $UPSTREAM_REPO 更新"; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "合并完成。"
+          else
+            conflicted="$(git -c core.quotepath=false diff --name-only --diff-filter=U)"
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "files<<EOF"
+              echo "$conflicted"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "自动合并出现冲突，需要人工处理：" >&2
+            echo "$conflicted" >&2
+            git merge --abort
+            exit 1
+          fi
+
+      - name: 合并冲突报警
+        if: failure() && steps.merge.outputs.conflict == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFLICT_FILES: ${{ steps.merge.outputs.files }}
+        shell: bash
+        run: |
+          today="$(date -u +%F)"
+          body="$(printf '自动同步上游 %s 时出现合并冲突，本次同步已中止，上游新内容尚未上线。\n\n冲突文件：\n\n```\n%s\n```\n\n处理方式：在本地 `git fetch upstream && git merge upstream/main`，解决冲突后 push 到 main 即可；下一次每日同步会继续自动跟进。\n\n失败的运行：%s/%s/actions/runs/%s' "$UPSTREAM_REPO" "$CONFLICT_FILES" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
+          gh issue create \
+            --title "上游同步冲突（$today）：需人工处理" \
+            --body "$body"
+
+      - name: 推送到 main（触发 Cloudflare Pages 部署）
+        if: steps.merge.outputs.changed == 'true'
+        shell: bash
+        run: git push origin "HEAD:$DEFAULT_BRANCH"
