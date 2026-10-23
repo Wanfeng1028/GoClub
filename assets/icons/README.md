@@ -7,7 +7,7 @@
 
 ## 品牌标
 
-站点品牌标是本站原创手绘 SVG（不是 Lucide 图标）。上一版「蓝方块白 G」已被否，当前 `static/logo.svg` 为新一轮**候选 1（几何折角 G）占位**，另有候选 2（对话气泡+Go）、候选 3（箭头环 G）待用户挑定后定版替换；三候选原件与多尺寸自查图在工作区 `goclub-redesign/logo2/`。顶栏品牌区（`layouts/partials/docs/brand.html`）以 `<img>` 引用 `static/logo.svg`；首页 hero 右侧放大展示同一文件。标签页图标 `static/favicon.svg` 与 `static/favicon.png`（512px）为候选 1 的白字形蓝底变体。`lucide/book-open.svg` 仅保留给首页栏目卡片（八股总结）使用，不再充当品牌标。
+站点品牌标是本站原创手绘 SVG（不是 Lucide 图标）。上一版「蓝方块白 G」已被否，当前 `static/logo.svg` 为用户 2026-10-23 挑定的**候选 3（箭头环 G）定稿**；三候选原件与多尺寸自查图在工作区 `goclub-redesign/logo2/`。顶栏品牌区（`layouts/partials/docs/brand.html`）以 `<img>` 引用 `static/logo.svg`；首页 hero 右侧放大展示同一文件。标签页图标 `static/favicon.svg` 与 `static/favicon.png`（512px）为候选 3 的白字形蓝底变体。`lucide/book-open.svg` 仅保留给首页栏目卡片（八股总结）使用，不再充当品牌标。
 
 ## 首页栏目卡片图标
 
