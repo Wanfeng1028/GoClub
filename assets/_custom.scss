@@ -958,12 +958,12 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .home-hero {
   max-width: 720px;
   margin: 0 auto;
-  padding: 12px 0 28px;
+  padding: 20px 0 28px;
   text-align: center;
 }
 @media screen and (min-width: 40rem) {
   /* 大字标整体稍微上移（用户 2026-10-24 亲定）：72 → 48 */
-  .home-hero { padding-top: 0px; }
+  .home-hero { padding-top: 26px; }
 }
 .home-eyebrow {
   display: inline-flex;
@@ -999,10 +999,10 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .home-wordmark-logo { width: 0.9em; height: 0.9em; flex: 0 0 auto; }
 .home-wordmark-text { line-height: 1.05; white-space: nowrap; }
 /* 大字标上下边距单独高权重声明：它本身是 <p>，主题给 .markdown p 的 1em 边距按 120px 字号放大成上下各 120px 的巨洞，必须压掉 */
-.markdown .home-hero .home-wordmark { margin: 6px 0 0; }
+.markdown .home-hero .home-wordmark { margin: 20px 0 0; }
 .markdown .home-hero .home-eyebrow { margin-top: 0; }
 .home-hero .home-title {
-  margin: 8px 0 0;
+  margin: 24px 0 0;
   font-size: 32px;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -1029,7 +1029,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   width: 560px;
   max-width: 100%;
   height: 48px;
-  margin: 22px auto 0;
+  margin: 26px auto 0;
   padding: 0 14px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -1059,7 +1059,7 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: 22px;
 }
 /* 首页全部操作钮统一胶囊（hero + 共建区，用户 2026-10-23 亲定）：主钮 Gemini 渐变实心，次钮 soft 底；flex:none 是为了压住主题给 .markdown a 的 flex:1（否则按钮被拉满整行） */
 .markdown .home-links a.home-link {
