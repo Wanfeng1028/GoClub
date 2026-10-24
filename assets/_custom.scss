@@ -1649,3 +1649,38 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 @media screen and (max-width: 30rem) {
   .goclub-feedback { flex-direction: column; align-items: flex-start; }
 }
+
+/* === OneNote 在线版（onenote-notes）转换样式：由转换器生成的 scoped CSS === */
+.onenote-note {
+  padding: 10px 14px;
+  border: 1px solid var(--vp-c-divider, #e2e2e3);
+  border-radius: 12px;
+  font-size: 13.5px;
+  color: var(--vp-c-text-2, #67676c);
+  margin: 14px 0 20px;
+}
+.onenote-body { overflow-x: auto; }
+.onenote-body img { max-width: 100%; height: auto; }
+.onenote-file {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid var(--vp-c-divider, #e2e2e3);
+  border-radius: 999px;
+  font-size: 13px;
+}
+.onenote-body, .onenote-body * { margin: 0; padding: 0; font-weight: normal; font-family: Calibri, sans-serif; }
+.onenote-body { font-size: 15px; }
+.onenote-body table, .onenote-body tr, .onenote-body td { border-color: #A3A3A3; }
+.onenote-body ul, .onenote-body ol { padding: 0; }
+.onenote-body .title .outline-element { display: inline; }
+.onenote-body .title .outline-element:nth-child(2) { margin-left: 10px !important; }
+.onenote-body .container-outline { font-size: 15px; }
+.onenote-body ul.checklist { list-style: none; padding-left: 0; }
+.onenote-body ul.checklist li { display: flex; align-items: baseline; gap: 6px; }
+.onenote-body .ink-text, .onenote-body .ink-space { display: inline-block; position: relative; vertical-align: bottom; }
+.onenote-body .ink-text { top: 0; left: 0; }
+.onenote-body .note-tag-icon { position: relative; }
+.onenote-body .note-tag-icon > svg { position: absolute; }
+.onenote-body .icon-secondary > svg { position: absolute; fill: black; filter: drop-shadow(0 0 2px white); height: 12px; top: -1px; }
+.onenote-body .icon-secondary > .content { position: absolute; color: black; filter: drop-shadow(0 0 2px white); font-size: 10px; top: -1px; user-select: none; }
+/* === OneNote 转换样式结束 === */
