@@ -3,6 +3,9 @@ title: "Go-gin"
 weight: 15
 type: docs
 bookToC: false
+aliases:
+  - "/s/i3kh/"
+shortlink: "i3kh"
 ---
 
 # Go-gin

@@ -3,6 +3,9 @@ title: "Go-err"
 weight: 4
 type: docs
 bookToC: false
+aliases:
+  - "/s/3mt7/"
+shortlink: "3mt7"
 ---
 
 # Go-err

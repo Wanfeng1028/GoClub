@@ -3,6 +3,9 @@ title: "Go-web实例"
 weight: 14
 type: docs
 bookToC: false
+aliases:
+  - "/s/hqjs/"
+shortlink: "hqjs"
 ---
 
 # Go-web实例

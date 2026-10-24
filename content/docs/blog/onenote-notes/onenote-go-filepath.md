@@ -3,6 +3,9 @@ title: "Go-filepath/path"
 weight: 13
 type: docs
 bookToC: false
+aliases:
+  - "/s/mos6/"
+shortlink: "mos6"
 ---
 
 # Go-filepath/path

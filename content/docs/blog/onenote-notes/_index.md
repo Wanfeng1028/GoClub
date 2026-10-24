@@ -2,6 +2,9 @@
 title: "OneNote 笔记（在线版）"
 weight: 4
 type: docs
+aliases:
+  - "/s/qzop/"
+shortlink: "qzop"
 ---
 
 # OneNote 笔记（在线版）

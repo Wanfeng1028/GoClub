@@ -3,6 +3,9 @@ title: "Go-byte"
 weight: 7
 type: docs
 bookToC: false
+aliases:
+  - "/s/n1wb/"
+shortlink: "n1wb"
 ---
 
 # Go-byte

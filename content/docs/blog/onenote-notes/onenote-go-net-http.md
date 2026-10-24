@@ -3,6 +3,9 @@ title: "Go-net/http"
 weight: 16
 type: docs
 bookToC: false
+aliases:
+  - "/s/tekp/"
+shortlink: "tekp"
 ---
 
 # Go-net/http

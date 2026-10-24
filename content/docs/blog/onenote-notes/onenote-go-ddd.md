@@ -3,6 +3,9 @@ title: "DDD领域驱动"
 weight: 19
 type: docs
 bookToC: false
+aliases:
+  - "/s/13dv/"
+shortlink: "13dv"
 ---
 
 # DDD领域驱动

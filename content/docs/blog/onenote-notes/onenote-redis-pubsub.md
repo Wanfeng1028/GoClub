@@ -3,6 +3,9 @@ title: "Redis-发布订阅"
 weight: 24
 type: docs
 bookToC: false
+aliases:
+  - "/s/c74k/"
+shortlink: "c74k"
 ---
 
 # Redis-发布订阅

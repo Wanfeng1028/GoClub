@@ -3,6 +3,9 @@ title: "Go-并发"
 weight: 10
 type: docs
 bookToC: false
+aliases:
+  - "/s/avs7/"
+shortlink: "avs7"
 ---
 
 # Go-并发

@@ -3,6 +3,9 @@ title: "Go-os"
 weight: 5
 type: docs
 bookToC: false
+aliases:
+  - "/s/ro92/"
+shortlink: "ro92"
 ---
 
 # Go-os

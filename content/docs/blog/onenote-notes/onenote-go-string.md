@@ -3,6 +3,9 @@ title: "Go-string"
 weight: 3
 type: docs
 bookToC: false
+aliases:
+  - "/s/qr7a/"
+shortlink: "qr7a"
 ---
 
 # Go-string

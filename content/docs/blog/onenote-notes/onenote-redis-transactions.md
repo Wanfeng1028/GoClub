@@ -3,6 +3,9 @@ title: "Redis-事务处理"
 weight: 25
 type: docs
 bookToC: false
+aliases:
+  - "/s/qhhu/"
+shortlink: "qhhu"
 ---
 
 # Redis-事务处理

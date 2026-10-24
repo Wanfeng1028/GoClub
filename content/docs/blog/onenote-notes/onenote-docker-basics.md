@@ -3,6 +3,9 @@ title: "Docker-基础"
 weight: 26
 type: docs
 bookToC: false
+aliases:
+  - "/s/ntqp/"
+shortlink: "ntqp"
 ---
 
 # Docker-基础

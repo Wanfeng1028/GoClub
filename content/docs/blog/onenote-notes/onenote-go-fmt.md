@@ -3,6 +3,9 @@ title: "Go-fmt"
 weight: 6
 type: docs
 bookToC: false
+aliases:
+  - "/s/paty/"
+shortlink: "paty"
 ---
 
 # Go-fmt

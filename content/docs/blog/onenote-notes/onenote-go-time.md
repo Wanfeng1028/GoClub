@@ -3,6 +3,9 @@ title: "Go-time"
 weight: 9
 type: docs
 bookToC: false
+aliases:
+  - "/s/w3t9/"
+shortlink: "w3t9"
 ---
 
 # Go-time

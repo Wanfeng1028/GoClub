@@ -3,6 +3,9 @@ title: "Rabbit-new"
 weight: 29
 type: docs
 bookToC: false
+aliases:
+  - "/s/b9tf/"
+shortlink: "b9tf"
 ---
 
 # Rabbit-new

@@ -3,6 +3,9 @@ title: "Go-多文件操作"
 weight: 11
 type: docs
 bookToC: false
+aliases:
+  - "/s/zco5/"
+shortlink: "zco5"
 ---
 
 # Go-多文件操作

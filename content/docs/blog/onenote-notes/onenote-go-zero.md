@@ -3,6 +3,9 @@ title: "Go-zero"
 weight: 18
 type: docs
 bookToC: false
+aliases:
+  - "/s/zegk/"
+shortlink: "zegk"
 ---
 
 # Go-zero

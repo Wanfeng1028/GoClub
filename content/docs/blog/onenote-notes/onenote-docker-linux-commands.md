@@ -3,6 +3,9 @@ title: "Docker-linux基础命令"
 weight: 27
 type: docs
 bookToC: false
+aliases:
+  - "/s/jege/"
+shortlink: "jege"
 ---
 
 # Docker-linux基础命令

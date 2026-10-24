@@ -3,6 +3,9 @@ title: "MySQL-基础"
 weight: 20
 type: docs
 bookToC: false
+aliases:
+  - "/s/pqx8/"
+shortlink: "pqx8"
 ---
 
 # MySQL-基础

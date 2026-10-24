@@ -3,6 +3,9 @@ title: "Go-Zap"
 weight: 17
 type: docs
 bookToC: false
+aliases:
+  - "/s/gkj2/"
+shortlink: "gkj2"
 ---
 
 # Go-Zap

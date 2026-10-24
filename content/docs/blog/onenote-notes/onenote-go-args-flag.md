@@ -3,6 +3,9 @@ title: "Go-os.Args/flag"
 weight: 12
 type: docs
 bookToC: false
+aliases:
+  - "/s/5r0d/"
+shortlink: "5r0d"
 ---
 
 # Go-os.Args/flag

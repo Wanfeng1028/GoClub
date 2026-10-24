@@ -3,6 +3,9 @@ title: "MySQL-gorm-概要"
 weight: 21
 type: docs
 bookToC: false
+aliases:
+  - "/s/bm3a/"
+shortlink: "bm3a"
 ---
 
 # MySQL-gorm-概要

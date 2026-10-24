@@ -3,6 +3,9 @@ title: "Redis-基础"
 weight: 23
 type: docs
 bookToC: false
+aliases:
+  - "/s/9csd/"
+shortlink: "9csd"
 ---
 
 # Redis-基础

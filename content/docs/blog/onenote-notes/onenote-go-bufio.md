@@ -3,6 +3,9 @@ title: "Go-bufio"
 weight: 8
 type: docs
 bookToC: false
+aliases:
+  - "/s/oly0/"
+shortlink: "oly0"
 ---
 
 # Go-bufio

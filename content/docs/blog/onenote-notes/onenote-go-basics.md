@@ -3,6 +3,9 @@ title: "Go-基础"
 weight: 2
 type: docs
 bookToC: false
+aliases:
+  - "/s/ar9b/"
+shortlink: "ar9b"
 ---
 
 # Go-基础

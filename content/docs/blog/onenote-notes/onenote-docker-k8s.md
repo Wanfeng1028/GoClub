@@ -3,6 +3,9 @@ title: "Docker-k8s"
 weight: 28
 type: docs
 bookToC: false
+aliases:
+  - "/s/qdmx/"
+shortlink: "qdmx"
 ---
 
 # Docker-k8s

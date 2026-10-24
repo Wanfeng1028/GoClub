@@ -3,6 +3,9 @@ title: "Go-面向对象"
 weight: 1
 type: docs
 bookToC: false
+aliases:
+  - "/s/4wqu/"
+shortlink: "4wqu"
 ---
 
 # Go-面向对象

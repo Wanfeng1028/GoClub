@@ -3,6 +3,9 @@ title: "MySQL-gorm-基础"
 weight: 22
 type: docs
 bookToC: false
+aliases:
+  - "/s/tue4/"
+shortlink: "tue4"
 ---
 
 # MySQL-gorm-基础
