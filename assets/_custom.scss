@@ -1684,3 +1684,11 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .onenote-body .icon-secondary > svg { position: absolute; fill: black; filter: drop-shadow(0 0 2px white); height: 12px; top: -1px; }
 .onenote-body .icon-secondary > .content { position: absolute; color: black; filter: drop-shadow(0 0 2px white); font-size: 10px; top: -1px; user-select: none; }
 /* === OneNote 转换样式结束 === */
+
+/* OneNote 截图版页面 */
+.onenote-snapshot { background: #fff; border: 1px solid var(--vp-c-divider, #e2e2e3); border-radius: 12px; overflow: hidden; }
+.onenote-snapshot img { display: block; width: 100%; height: auto; }
+.onenote-details { margin-top: 22px; border: 1px solid var(--vp-c-divider, #e2e2e3); border-radius: 12px; padding: 12px 16px; }
+.onenote-details summary { cursor: pointer; font-weight: 600; font-size: 14.5px; }
+.onenote-details[open ] summary { margin-bottom: 10px; }
+.onenote-doc { font-size: 15px; line-height: 1.75; }

@@ -73,3 +73,479 @@ shortlink: "9csd"
 
 
 </div>
+
+<details class="onenote-details"><summary>附件文档全文：《redis 的知识》（go-redis 函数整理）</summary>
+<div class="onenote-body onenote-doc">
+<div class='mx-auto max-w-5xl shadow-md prose bg-white px-2 py-4'>
+        <h1 class='flex flex-row justify-between items-center my-4 h-8'>
+            <span>redis的知识</span>
+            <a href="https://chatboxai.app" target="_blank" >
+                <img src='https://chatboxai.app/icon.png'>
+            </a>
+        </h1>
+        <hr />
+        <div>
+<h2>1. 添加缓存服务</h2>
+<div>
+<p><b>ASSISTANT: </b></p>
+<div><p>下面把示例代码里“每一个用到的函数/方法”的函数签名、参数说明、返回值与作用按模块整理，便于你快速查阅。内容基于 github.com/redis/go-redis/v9 与 gin。</p>
+<p>一、Redis 客户端初始化与连通性</p>
+<ul>
+<li>
+<p>创建客户端</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>NewClient</span><span>(</span><span>opt </span><span>*</span><span>redis</span><span>.</span><span>Options</span><span>)</span><span> </span><span>*</span><span>redis</span><span>.</span><span>Client
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>opt：Redis 连接配置。
+<ul>
+<li>Addr string：地址，如 &quot;redis:6379&quot; 或 &quot;127.0.0.1:6379&quot;</li>
+<li>Password string：密码（示例为 &quot;123456&quot;）</li>
+<li>DB int：数据库索引，默认 0</li>
+<li>PoolSize int：连接池最大连接数</li>
+<li>MinIdleConns int：保持的最小空闲连接</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>返回值：*redis.Client，客户端实例。</li>
+<li>作用：构造一个连接 Redis 的客户端。</li>
+</ul>
+</li>
+<li>
+<p>Ping 测试连通性</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>c </span><span>*</span><span>Client</span><span>)</span><span> </span><span>Ping</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>)</span><span> </span><span>*</span><span>redis</span><span>.</span><span>StatusCmd
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>ctx：上下文（可控制超时/取消）。</li>
+</ul>
+</li>
+<li>返回值：*redis.StatusCmd（结果可通过 Err() 或 Result() 读取）。
+<ul>
+<li>StatusCmd.Err() error：是否有错误</li>
+<li>StatusCmd.Result() (string, error)：通常返回 &quot;PONG&quot;</li>
+</ul>
+</li>
+<li>作用：检测与 Redis 的连接是否正常。</li>
+</ul>
+</li>
+<li>
+<p>上下文超时（标准库）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>WithTimeout</span><span>(</span><span>parent context</span><span>.</span><span>Context</span><span>,</span><span> timeout time</span><span>.</span><span>Duration</span><span>)</span><span> </span><span>(</span><span>context</span><span>.</span><span>Context</span><span>,</span><span> context</span><span>.</span><span>CancelFunc</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>parent：父上下文</li>
+<li>timeout：超时时间</li>
+</ul>
+</li>
+<li>返回值：
+<ul>
+<li>Context：带超时的上下文</li>
+<li>CancelFunc：取消函数（用完要调用）</li>
+</ul>
+</li>
+<li>作用：限制操作最长执行时间，避免挂死。</li>
+</ul>
+</li>
+</ul>
+<p>二、Gin 路由、处理函数与上下文</p>
+<ul>
+<li>
+<p>创建默认引擎</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>Default</span><span>(</span><span>)</span><span> </span><span>*</span><span>gin</span><span>.</span><span>Engine
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>返回值：*gin.Engine，包含 Logger、Recovery 中间件。</li>
+<li>作用：快捷创建 Web 引擎。</li>
+</ul>
+</li>
+<li>
+<p>注册 POST 路由</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>engine </span><span>*</span><span>Engine</span><span>)</span><span> </span><span>POST</span><span>(</span><span>relativePath </span><span>string</span><span>,</span><span> handlers </span><span>...</span><span>gin</span><span>.</span><span>HandlerFunc</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>relativePath：路由路径，如 &quot;/tx-pipeline-demo&quot;</li>
+<li>handlers：一个或多个处理函数</li>
+</ul>
+</li>
+<li>作用：绑定处理函数到 POST 路由。</li>
+</ul>
+</li>
+<li>
+<p>处理函数类型</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>type</span><span> HandlerFunc </span><span>func</span><span>(</span><span>*</span><span>gin</span><span>.</span><span>Context</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>*gin.Context：请求上下文（含 Request、Response、Params 等）。</li>
+</ul>
+</li>
+<li>作用：处理单个 HTTP 请求。</li>
+</ul>
+</li>
+<li>
+<p>从请求获取上下文</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>c </span><span>*</span><span>gin</span><span>.</span><span>Context</span><span>)</span><span> Request</span><span>.</span><span>Context</span><span>(</span><span>)</span><span> context</span><span>.</span><span>Context
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>返回值：标准库 Context，用于传递给 Redis 等库。</li>
+<li>作用：让后端操作受请求生命周期控制。</li>
+</ul>
+</li>
+<li>
+<p>返回 JSON</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>c </span><span>*</span><span>gin</span><span>.</span><span>Context</span><span>)</span><span> </span><span>JSON</span><span>(</span><span>code </span><span>int</span><span>,</span><span> obj any</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>code：HTTP 状态码，如 http.StatusOK</li>
+<li>obj：任意可序列化对象，常用 gin.H</li>
+</ul>
+</li>
+<li>作用：返回 JSON 响应。</li>
+</ul>
+</li>
+<li>
+<p>gin.H（便捷 Map）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>type</span><span> H </span><span>map</span><span>[</span><span>string</span><span>]</span><span>any
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>作用：构建 JSON 对象。</li>
+</ul>
+</li>
+<li>
+<p>启动服务</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>engine </span><span>*</span><span>Engine</span><span>)</span><span> </span><span>Run</span><span>(</span><span>addr </span><span>...</span><span>string</span><span>)</span><span> </span><span>error</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>addr：可选地址，默认 &quot;:8080&quot;</li>
+</ul>
+</li>
+<li>返回值：error</li>
+<li>作用：启动 HTTP 服务器。</li>
+</ul>
+</li>
+</ul>
+<p>三、Redis 事务（MULTI/EXEC）与乐观锁（WATCH）</p>
+<ul>
+<li>
+<p>使用事务批处理（在客户端维度）</p>
+<ul>
+<li>签名（客户端方法）：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>c </span><span>*</span><span>Client</span><span>)</span><span> </span><span>TxPipelined</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> fn </span><span>func</span><span>(</span><span>redis</span><span>.</span><span>Pipeliner</span><span>)</span><span> </span><span>error</span><span>)</span><span> </span><span>(</span><span>[</span><span>]</span><span>redis</span><span>.</span><span>Cmder</span><span>,</span><span> </span><span>error</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>ctx：上下文</li>
+<li>fn：回调，在其中向事务管道 pipe 排队命令
+<ul>
+<li>类型：func(redis.Pipeliner) error</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>返回值：
+<ul>
+<li>[]redis.Cmder：每条命令的结果对象</li>
+<li>error：提交阶段错误；若为 nil 表示 EXEC 成功</li>
+</ul>
+</li>
+<li>作用：封装 MULTI/EXEC，一次性按顺序执行回调中排队的命令，保证原子性并减少往返。</li>
+</ul>
+</li>
+<li>
+<p>获取事务管道（如果你需要更细控制）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>c </span><span>*</span><span>Client</span><span>)</span><span> </span><span>TxPipeline</span><span>(</span><span>)</span><span> redis</span><span>.</span><span>Pipeliner
+</span><span>2</span><span></span><span>func</span><span> </span><span>(</span><span>tx </span><span>*</span><span>Tx</span><span>)</span><span> </span><span>TxPipeline</span><span>(</span><span>)</span><span> redis</span><span>.</span><span>Pipeliner
+</span><span>3</span></code></div></div></div></pre>
+</li>
+<li>说明：返回一个事务管道，需手动 Exec/Close；一般直接用 TxPipelined 更简单。</li>
+</ul>
+</li>
+<li>
+<p>乐观锁（WATCH）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>c </span><span>*</span><span>Client</span><span>)</span><span> </span><span>Watch</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> fn </span><span>func</span><span>(</span><span>*</span><span>redis</span><span>.</span><span>Tx</span><span>)</span><span> </span><span>error</span><span>,</span><span> keys </span><span>...</span><span>string</span><span>)</span><span> </span><span>error</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>ctx：上下文</li>
+<li>fn：回调，在监视的键不被修改的前提下执行；类型：func(*redis.Tx) error</li>
+<li>keys：要监视的键列表</li>
+</ul>
+</li>
+<li>返回值：
+<ul>
+<li>error：
+<ul>
+<li>nil：提交成功</li>
+<li>redis.TxFailedErr：表示监视的键在执行前被其他客户端修改，事务未执行（需重试）</li>
+<li>其他 error：连接/命令错误等</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>作用：基于乐观锁的事务控制。READ → 计算 → MULTI/EXEC 提交；若被改动，EXEC 不执行。</li>
+</ul>
+</li>
+<li>
+<p>在 WATCH 回调里读取与提交</p>
+<ul>
+<li>
+<p>读取键值：</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>tx </span><span>*</span><span>Tx</span><span>)</span><span> </span><span>Get</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> key </span><span>string</span><span>)</span><span> </span><span>*</span><span>redis</span><span>.</span><span>StringCmd
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>ctx：上下文</li>
+<li>key：键名</li>
+</ul>
+</li>
+<li>返回值：*redis.StringCmd
+<ul>
+<li>常用读取：
+<ul>
+<li>StringCmd.Result() (string, error)</li>
+<li>StringCmd.Int() (int, error)         // 便捷转换为整数（示例中使用）</li>
+<li>StringCmd.Int64() (int64, error)     // 另一个整数转换</li>
+</ul>
+</li>
+<li>错误：
+<ul>
+<li>redis.Nil：键不存在（不是连接错误）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>作用：读取当前值用于判断。</li>
+</ul>
+</li>
+<li>
+<p>在事务中排队命令并提交：</p>
+<ul>
+<li>签名（在 tx 上）：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>tx </span><span>*</span><span>Tx</span><span>)</span><span> </span><span>TxPipelined</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> fn </span><span>func</span><span>(</span><span>redis</span><span>.</span><span>Pipeliner</span><span>)</span><span> </span><span>error</span><span>)</span><span> </span><span>(</span><span>[</span><span>]</span><span>redis</span><span>.</span><span>Cmder</span><span>,</span><span> </span><span>error</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数与返回值：同 Client.TxPipelined</li>
+<li>作用：在 WATCH 的安全窗口内，将多条写操作作为一个事务提交。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>事务相关错误</p>
+<ul>
+<li>redis.TxFailedErr（变量）
+<ul>
+<li>含义：监视的键在 EXEC 前被改动导致事务未执行，通常需要重试。</li>
+</ul>
+</li>
+<li>redis.Nil（变量）
+<ul>
+<li>含义：值不存在（非致命错误，表示键不存在）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>四、Pipeliner 常用命令（在事务中或普通管道中都可用）</p>
+<ul>
+<li>
+<p>HSET（设置哈希字段）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>p Pipeliner</span><span>)</span><span> </span><span>HSet</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> key </span><span>string</span><span>,</span><span> values </span><span>...</span><span>interface</span><span>{</span><span>}</span><span>)</span><span> </span><span>*</span><span>redis</span><span>.</span><span>IntCmd
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>ctx：上下文</li>
+<li>key：哈希键名</li>
+<li>values：可为成对的 field, value 序列，或单个 map[string]interface{}
+<ul>
+<li>示例：HSet(ctx, &quot;user:1001&quot;, &quot;name&quot;, &quot;Alice&quot;, &quot;balance&quot;, &quot;100&quot;)</li>
+<li>或：HSet(ctx, &quot;user:1001&quot;, map[string]interface{}{&quot;name&quot;:&quot;Alice&quot;,&quot;balance&quot;:&quot;100&quot;})</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>返回值：*redis.IntCmd（新添加的字段数量）
+<ul>
+<li>读取：IntCmd.Result() (int64, error)，IntCmd.Val() int64</li>
+</ul>
+</li>
+<li>作用：批量设置哈希字段。</li>
+</ul>
+</li>
+<li>
+<p>INCR（自增）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>p Pipeliner</span><span>)</span><span> </span><span>Incr</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> key </span><span>string</span><span>)</span><span> </span><span>*</span><span>redis</span><span>.</span><span>IntCmd
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数：
+<ul>
+<li>ctx：上下文</li>
+<li>key：键名（不存在时按 0 起始）</li>
+</ul>
+</li>
+<li>返回值：*redis.IntCmd（自增后的值）</li>
+<li>作用：计数器 +1。</li>
+</ul>
+</li>
+<li>
+<p>DECR（自减）</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>p Pipeliner</span><span>)</span><span> </span><span>Decr</span><span>(</span><span>ctx context</span><span>.</span><span>Context</span><span>,</span><span> key </span><span>string</span><span>)</span><span> </span><span>*</span><span>redis</span><span>.</span><span>IntCmd
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>参数/返回值：同 Incr</li>
+<li>作用：计数器 -1（常用于扣库存）。</li>
+</ul>
+</li>
+<li>
+<p>命令结果公共接口</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>type</span><span> Cmder </span><span>interface</span><span> </span><span>{</span><span>
+</span><span>2</span><span>    </span><span>Name</span><span>(</span><span>)</span><span> </span><span>string</span><span>
+</span><span>3</span><span>    </span><span>FullName</span><span>(</span><span>)</span><span> </span><span>string</span><span>
+</span><span>4</span><span>    </span><span>Args</span><span>(</span><span>)</span><span> </span><span>[</span><span>]</span><span>interface</span><span>{</span><span>}</span><span>
+</span><span>5</span><span>    </span><span>Err</span><span>(</span><span>)</span><span> </span><span>error</span><span>
+</span><span>6</span><span>    </span><span>String</span><span>(</span><span>)</span><span> </span><span>string</span><span>
+</span><span>7</span><span></span><span>}</span><span>
+</span><span>8</span></code></div></div></div></pre>
+</li>
+<li>说明：TxPipelined 返回的每条命令结果都实现 Cmder，可用于统一检查错误。</li>
+</ul>
+</li>
+</ul>
+<p>五、HTTP 常量与用法（标准库）</p>
+<ul>
+<li>HTTP 状态码（net/http）
+<ul>
+<li>常用：
+<ul>
+<li>http.StatusOK（200）</li>
+<li>http.StatusInternalServerError（500）</li>
+<li>http.StatusConflict（409）</li>
+</ul>
+</li>
+<li>用途：表达请求成功、服务器错误、资源冲突（事务重试失败）。</li>
+</ul>
+</li>
+</ul>
+<p>六、其他标准库函数（示例中用到）</p>
+<ul>
+<li>
+<p>字符串格式化</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>Sprintf</span><span>(</span><span>format </span><span>string</span><span>,</span><span> a </span><span>...</span><span>any</span><span>)</span><span> </span><span>string</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>作用：构造错误信息或日志字符串。</li>
+</ul>
+</li>
+<li>
+<p>环境变量</p>
+<ul>
+<li>签名：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>Getenv</span><span>(</span><span>key </span><span>string</span><span>)</span><span> </span><span>string</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>作用：读取 REDIS_ADDR、REDIS_PASSWORD 等。</li>
+</ul>
+</li>
+<li>
+<p>时间</p>
+<ul>
+<li>当前时间：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>Now</span><span>(</span><span>)</span><span> time</span><span>.</span><span>Time
+</span><span>2</span></code></div></div></div></pre>
+</li>
+<li>格式化：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>(</span><span>t Time</span><span>)</span><span> </span><span>Format</span><span>(</span><span>layout </span><span>string</span><span>)</span><span> </span><span>string</span><span>
+</span><span>2</span></code></div></div></div></pre>
+<ul>
+<li>常用 layout：time.RFC3339</li>
+</ul>
+</li>
+<li>休眠：
+<pre><div><div><div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chatbox-tint-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"></path><path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"></path><path d="M5.5 15h-1.5"></path><path d="M6 9h-2"></path><path d="M5 12h-3"></path></svg><span>GO</span></div><div></div></div><div><div><code><span>1</span><span>func</span><span> </span><span>Sleep</span><span>(</span><span>d time</span><span>.</span><span>Duration</span><span>)</span><span>
+</span><span>2</span></code></div></div></div></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>七、用法串起来的流程提示（简化版）</p>
+<ul>
+<li>创建客户端：redis.NewClient(&amp;redis.Options{Addr, Password, ...})</li>
+<li>Ping 连通性：rdb.Ping(ctx)</li>
+<li>路由与处理函数：engine.POST(..., func(c *gin.Context){ ... })</li>
+<li>在处理函数中拿到 ctx：ctx := c.Request.Context()</li>
+<li>原子事务批处理：rdb.TxPipelined(ctx, func(pipe redis.Pipeliner){ pipe.HSet(...); pipe.Incr(...); return nil })</li>
+<li>乐观锁事务：rdb.Watch(ctx, func(tx *redis.Tx){ v, _ := tx.Get(ctx, key).Int(); tx.TxPipelined(ctx, func(p redis.Pipeliner){ p.Decr(...); p.Incr(...); return nil }); return nil }, key)</li>
+<li>错误分支：
+<ul>
+<li>errors.Is(err, redis.TxFailedErr)：重试</li>
+<li>err == redis.Nil：键不存在</li>
+<li>其他 err：返回 500</li>
+</ul>
+</li>
+</ul>
+<p>如果你还想看某个具体方法的更多字段、可选参数或返回类型细节（例如 IntCmd、StringCmd 的所有方法），告诉我方法名，我再进一步展开。</p></div></div>
+<hr />
+</div>
+
+        <hr />
+        <a href="https://chatboxai.app" target="_blank">
+            <img src='https://chatboxai.app/icon.png'>
+            <b style='font-size:30px'>Chatbox AI</b>
+        </a>
+        <p><a a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
+    </div>
+</div>
+</details>

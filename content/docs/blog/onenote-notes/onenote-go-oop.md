@@ -10,9 +10,15 @@ shortlink: "4wqu"
 
 # Go-面向对象
 
-<div class="onenote-note">本页由同名 OneNote 笔记转换而来，可直接在线阅读；原始笔记文件见「<a href="/docs/blog/onenotes/">Go语言相关笔记</a>」页的原始链接。</div>
+<div class="onenote-note">本页是手写/批注类笔记，直接按原始笔记截图呈现（转成文字会乱序）；原始笔记文件见「<a href="/docs/blog/onenotes/">Go语言相关笔记</a>」页的原始链接。</div>
+<div class="onenote-snapshot">
+<img src="/pictures/onenote-notes/snapshots/onenote-go-oop-1.webp" alt="onenote-go-oop 原始笔记截图 1" loading="lazy" decoding="async">
+<img src="/pictures/onenote-notes/snapshots/onenote-go-oop-2.webp" alt="onenote-go-oop 原始笔记截图 2" loading="lazy" decoding="async">
+</div>
 
+<details class="onenote-details"><summary>转换文字版（供搜索 / 复制）</summary>
 <div class="onenote-body">
+
 
 
 <div class="title" data-onenote-x="0" data-onenote-y="0"><div class="container-outline" style="max-width: 624px"><div class="outline-element" style="margin-left: 0px"></div>
@@ -97,4 +103,6 @@ shortlink: "4wqu"
 </div></div><div data-onenote-x="2.5" data-onenote-y="72.9000015258789" data-onenote-w="26.51388931274414" data-onenote-h="2.25"><img src="/pictures/onenote-notes/onenote-go-oop-05.webp" alt="笔记图片" loading="lazy" decoding="async"></div><div data-onenote-x="2.5" data-onenote-y="75.9000015258789" data-onenote-w="26.29166603088379" data-onenote-h="6.541666507720947"><img src="/pictures/onenote-notes/onenote-go-oop-06.webp" alt="笔记图片" loading="lazy" decoding="async"></div>
 
 
+
 </div>
+</details>
