@@ -955,6 +955,15 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 
 /* ============ 9. 首页（文档门户风：居中 hero + 大搜索框 + 数据带 + 栏目索引行） ============ */
 /* 第五轮口径：删渐变大字/彩色光晕/悬浮大 logo，回归与内页一致的 VP 色板与细线体系，排版即设计。 */
+/* 第一屏（用户 2026-10-24 亲定）：hero + 数据横幅撑满一屏（顶栏 64px 固定，内容区从顶栏下方起算），
+   全部栏目从第二屏开始；内容超高时 min-height 只撑开不裁切。 */
+.home-first {
+  min-height: calc(100vh - var(--gc-topbar-h));
+  min-height: calc(100svh - var(--gc-topbar-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .home-hero {
   max-width: 720px;
   margin: 0 auto;

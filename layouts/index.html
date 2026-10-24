@@ -13,6 +13,8 @@
   <article class="markdown book-article home-article">
     {{/* 首页（第五轮）：高级克制的文档门户风——居中 hero + 大搜索框 + 真实数据带 + 栏目索引行。
          数据全部由模板在构建时从 content 实时计数，不写死。 */}}
+    {{/* 第一屏（用户 2026-10-24 亲定）：hero + 数据横幅撑满一屏，全部栏目从第二屏开始 */}}
+    <div class="home-first">
     <section class="home-hero">
       <p class="home-eyebrow"><span class="home-eyebrow-dot" aria-hidden="true"></span>社区共建 · 开源免费</p>
       {{/* 大字标：定稿气泡 logo + Fredoka 600 艺术字（BotsRouter 同款品牌字），logo URL 带内容哈希防缓存 */}}
@@ -52,6 +54,7 @@
         </div>
       {{ end }}
     </section>
+    </div>
 
     {{/* 栏目索引：两列索引行（序号 + 图标 + 栏目名 + 一句摘要 + 篇数 + 箭头），细线分隔 */}}
     <section class="home-index" aria-label="全部栏目">
