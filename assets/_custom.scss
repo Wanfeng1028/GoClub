@@ -989,7 +989,6 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   align-items: center;
   justify-content: center;
   gap: 0.22em;
-  margin: 4px 0 0;
   font-family: "Fredoka", "PingFang SC", "Hiragino Sans GB", sans-serif;
   font-size: clamp(72px, 11vw, 120px);
   font-weight: 600;
@@ -999,6 +998,9 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 }
 .home-wordmark-logo { width: 0.9em; height: 0.9em; flex: 0 0 auto; }
 .home-wordmark-text { line-height: 1.05; white-space: nowrap; }
+/* 大字标上下边距单独高权重声明：它本身是 <p>，主题给 .markdown p 的 1em 边距按 120px 字号放大成上下各 120px 的巨洞，必须压掉 */
+.markdown .home-hero .home-wordmark { margin: 6px 0 0; }
+.markdown .home-hero .home-eyebrow { margin-top: 0; }
 .home-hero .home-title {
   margin: 8px 0 0;
   font-size: 32px;
