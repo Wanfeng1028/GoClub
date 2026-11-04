@@ -1660,7 +1660,6 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
   .home-search { width: 100%; }
   .home-wordmark { font-size: clamp(40px, 12vw, 72px); }
   .welcome-modal { width: 100vw; max-width: 100vw; }
-  .welcome-card { max-width: min(420px, calc(100vw - 40px)); }
 }
 @media screen and (max-width: 30rem) {
   .goclub-feedback { flex-direction: column; align-items: flex-start; }
