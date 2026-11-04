@@ -1,14 +1,30 @@
 name: 同步上游更新
 
-# 为什么需要这个 workflow：
+# 为什么是“只同步内容”而不是 merge：
 #
-# 本仓库是 LeoninCS/GoClub 的 fork，前端（layouts/assets）是本站自己的，
-# 但内容应跟随上游：上游 main 有新提交时，自动 merge 进本站 main，
-# push 后由 Cloudflare Pages 自动重新构建部署，整条链路不用人守。
+# 本仓库是 LeoninCS/GoClub 的 fork，前端（layouts/assets/static/themes、
+# hugo.toml、自定样式、首页模板）是本站自己的，内容才跟随上游。
+# 旧版工作流用普通 git merge 合并上游 main：2026-10-28 那次同步就把
+# 本站 2026-10-23 的 redesign 冲掉了（上游同一批改了前端文件，merge
+# 把上游前端带了进来）。从本版起，同步只取上游在内容路径内的改动，
+# 前端文件永远不会被上游覆盖。
 #
-# 策略是普通 merge（不用 rebase、绝不 force push），本站的改版提交与
-# 上游的内容提交长期并存。一旦自动 merge 出现冲突，工作流会失败并
-# 在本仓开 issue 报警，留给人工处理，不静默吞掉。
+# 同步范围（白名单，只有这两棵树）：
+#   content/        —— 面经、八股、每日一问、招聘信息页等全部 Hugo 内容
+#   data/jobs/      —— 招聘数据（daily-updates.json、early-recruitment.json）
+# 明确不同步（上游改了也不跟）：
+#   layouts/、assets/、static/、themes/、hugo.toml、scripts/、
+#   .github/、data/contributors.json（构建时由 generate_contributors.py
+#   重新生成）以及其他一切文件。特别说明：上游 2026-11-04 的应用式
+#   单屏布局重构（6d69b1e，PR #95）属于前端，有意不跟。
+#
+# 其他行为与旧版一致：每天 UTC 22:17（北京时间次日 06:17）跑一次，
+# 也可手动触发；绝不 force push；失败时在本仓开 issue 报警且不推送，
+# 本站 main 不会被改动；推送后由 Cloudflare Pages 自动重新构建部署。
+# 附带说明：短链工作流（shortlink-sync.yml）在 main 收到推送后自动
+# 补齐内容 front matter 的短链，因此即使上游版本覆盖了本地短链字段，
+# 下一次推送后也会自动补回。招聘同步（qq-jobs-sync.yml）从腾讯文档取
+# 数、与本工作流无关，本工作流不碰它。
 
 on:
   schedule:
@@ -30,7 +46,7 @@ env:
 
 jobs:
   sync:
-    name: 合并上游并发布
+    name: 同步上游内容并发布
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -39,15 +55,16 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.repository.default_branch }}
-          submodules: recursive
+          submodules: false
 
-      - name: 合并上游 main
-        id: merge
+      - name: 只同步上游内容路径
+        id: sync
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name "Wanfeng1028"
           git config user.email "wanfeng572@gmail.com"
-          git remote add upstream "https://github.com/$UPSTREAM_REPO.git"
+          git remote add upstream "https://github.com/$UPSTREAM_REPO.git" 2>/dev/null || git remote set-url upstream "https://github.com/$UPSTREAM_REPO.git"
           git fetch upstream main
 
           if git merge-base --is-ancestor upstream/main HEAD; then
@@ -56,40 +73,61 @@ jobs:
             exit 0
           fi
 
-          echo "上游有新提交，开始合并："
+          echo "上游有新提交："
           git log --oneline HEAD..upstream/main | head -20
 
-          if git merge upstream/main -m "chore: 同步上游 $UPSTREAM_REPO 更新"; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "合并完成。"
-          else
-            conflicted="$(git -c core.quotepath=false diff --name-only --diff-filter=U)"
-            echo "conflict=true" >> "$GITHUB_OUTPUT"
-            {
-              echo "files<<EOF"
-              echo "$conflicted"
-              echo "EOF"
-            } >> "$GITHUB_OUTPUT"
-            echo "自动合并出现冲突，需要人工处理：" >&2
-            echo "$conflicted" >&2
-            git merge --abort
+          base="$(git merge-base HEAD upstream/main)"
+          mapfile -d '' -t apply_files < <(git -c core.quotepath=false diff -z --name-only --diff-filter=AMT "$base" upstream/main -- content data/jobs)
+          mapfile -d '' -t delete_files < <(git -c core.quotepath=false diff -z --name-only --diff-filter=D "$base" upstream/main -- content data/jobs)
+
+          if [[ ${#apply_files[@]} -eq 0 && ${#delete_files[@]} -eq 0 ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "上游新提交均不在内容路径（content、data/jobs）内，本次不同步、不推送。"
+            exit 0
+          fi
+
+          if [[ ${#apply_files[@]} -gt 0 ]]; then
+            git checkout upstream/main -- "${apply_files[@]}"
+          fi
+          if [[ ${#delete_files[@]} -gt 0 ]]; then
+            git rm --ignore-unmatch -q -- "${delete_files[@]}"
+          fi
+
+          # 防守：暂存区只允许内容路径，任何白名单外文件出现即失败、不推送
+          staged="$(git -c core.quotepath=false diff --cached --name-only)"
+          unexpected="$(printf '%s\n' "$staged" | grep -Ev '^(content/|data/jobs/)' || true)"
+          if [[ -n "$unexpected" ]]; then
+            echo "同步产生了白名单外改动，拒绝提交：" >&2
+            echo "$unexpected" >&2
             exit 1
           fi
 
-      - name: 合并冲突报警
-        if: failure() && steps.merge.outputs.conflict == 'true'
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "内容路径无实际差异，无需提交。"
+            exit 0
+          fi
+
+          {
+            echo "files<<EOF"
+            echo "$staged"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          git commit -m "chore: 同步上游内容（仅 content 与 data/jobs）" -m "$(printf '同步文件：\n%s\n' "$staged")"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "内容同步完成，待推送。"
+
+      - name: 同步失败报警
+        if: failure()
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONFLICT_FILES: ${{ steps.merge.outputs.files }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           today="$(date -u +%F)"
-          body="$(printf '自动同步上游 %s 时出现合并冲突，本次同步已中止，上游新内容尚未上线。\n\n冲突文件：\n\n```\n%s\n```\n\n处理方式：在本地 `git fetch upstream && git merge upstream/main`，解决冲突后 push 到 main 即可；下一次每日同步会继续自动跟进。\n\n失败的运行：%s/%s/actions/runs/%s' "$UPSTREAM_REPO" "$CONFLICT_FILES" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
-          gh issue create \
-            --title "上游同步冲突（$today）：需人工处理" \
-            --body "$body"
+          body="$(printf '上游内容同步失败，本次同步未推送，本站 main 未改动。\n\n失败的运行：%s/%s/actions/runs/%s\n\n处理方式：查看运行日志定位失败步骤；内容同步失败不会影响本站现有部署。' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
+          gh issue create --title "上游内容同步失败（$today）" --body "$body"
 
       - name: 推送到 main（触发 Cloudflare Pages 部署）
-        if: steps.merge.outputs.changed == 'true'
+        if: steps.sync.outputs.changed == 'true'
         shell: bash
         run: git push origin "HEAD:$DEFAULT_BRANCH"
