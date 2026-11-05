@@ -891,16 +891,16 @@ body.book-kind-home .book-footer {
   }
 }
 @media screen and (max-width: 40rem) {
+  /* 手机端底栏改单行极简：只留“在线 + 今日浏览”一行，© 与投稿/贡献者/GitHub 隐藏（顶栏与首页已有），不再三行叠放占屏。 */
   .statusbar {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 6px;
     min-height: 0;
-    padding: 12px;
+    padding: 8px 12px;
   }
-  /* 移动端底栏叠成三行（约 90px），页面底部多留空间，防遮挡。 */
-  body {
-    padding-bottom: 110px;
+  .status-left,
+  .status-right {
+    display: none;
   }
   .status-live {
     width: 100%;
@@ -915,6 +915,14 @@ body.book-kind-home .book-footer {
     gap: 8px;
     padding-left: 8px;
     margin-left: 8px;
+  }
+  /* 手机端今日只留“浏览”，访客/访问隐藏（一行放不下，数字太密）。 */
+  .status-live .live-group span:not(:first-of-type) {
+    display: none;
+  }
+  /* 单行底栏约 35px，页面底部留 40px 即可（不再是三行的 110px）。 */
+  body {
+    padding-bottom: var(--gc-status-h);
   }
 }
 @media screen and (min-width: 60rem) {
