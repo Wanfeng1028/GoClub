@@ -47,6 +47,10 @@
 .goclub-umami-metric {
   opacity: 0.85;
 }
+/* hidden 必须真正隐藏统计块：--sidebar 的 display:flex 会覆盖 hidden 属性默认的 display:none。 */
+.goclub-umami-stats[hidden] {
+  display: none;
+}
 /* 侧边栏：目录下方的紧凑站点状态。 */
 .goclub-umami-stats--sidebar {
   display: flex;

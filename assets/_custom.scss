@@ -769,12 +769,12 @@ body.search-overlay-open { overflow: hidden; }
 .book-page > .book-article,
 .book-page > .book-footer {
   width: 100%;
-  max-width: var(--gc-article-w); /* 688px = VP .content-container */
+  max-width: var(--gc-wide-w); /* 1024px 宽列：大屏下正文撑满内容区，两侧留白收窄 */
   margin-inline: auto;
 }
-/* 栏目页正文列与文章页一致 = VP 文档列 688px（不再用 1024 宽列） */
+/* 栏目页正文列与文章页一致 = 1024px 宽列 */
 body.book-kind-section .book-page > .book-article,
-body.book-kind-section .book-page > .book-footer { max-width: var(--gc-article-w); }
+body.book-kind-section .book-page > .book-footer { max-width: var(--gc-wide-w); }
 /* 首页：无侧栏，全宽走 VP home 的两侧留白（24 / 48 / 64） */
 body.book-kind-home .book-page { padding: 0 24px 64px; }
 @media screen and (min-width: 40rem) {

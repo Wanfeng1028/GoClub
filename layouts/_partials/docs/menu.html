@@ -14,9 +14,23 @@
     {{ partial "docs/inject/menu-after" . }}
   </div>
 
-</nav>
+  {{/* 站点统计（Umami）：在线人数 + 访问/访客/浏览（今日/累计）。数据由 inject/body 的 goclub/umami-stats partial 填充；拉取失败时保持隐藏。 */}}
+  <div class="goclub-umami-stats goclub-umami-stats--sidebar" hidden>
+    <div class="goclub-umami-label">站点统计</div>
+    <div class="goclub-umami-online"><span class="goclub-umami-online-dot" aria-hidden="true"></span>在线 <b data-umami-stat="active">–</b></div>
+    <div class="goclub-umami-grid">
+      <span class="goclub-umami-row-label">今日</span>
+      <span class="goclub-umami-metric">访问</span><b data-umami-stat="t_visits">–</b>
+      <span class="goclub-umami-metric">访客</span><b data-umami-stat="t_visitors">–</b>
+      <span class="goclub-umami-metric">浏览</span><b data-umami-stat="t_pageviews">–</b>
+      <span class="goclub-umami-row-label">累计</span>
+      <span class="goclub-umami-metric">访问</span><b data-umami-stat="visits">–</b>
+      <span class="goclub-umami-metric">访客</span><b data-umami-stat="visitors">–</b>
+      <span class="goclub-umami-metric">浏览</span><b data-umami-stat="pageviews">–</b>
+    </div>
+  </div>
 
-{{/* 站点动态（umami）统计块已按改版要求从侧栏移除渲染；数据脚本仍由 inject/body 的 goclub/umami-stats partial 加载（无容器时自动跳过）。 */}}
+</nav>
 
 <!-- Restore menu position as soon as possible to avoid flickering -->
 {{ $script := resources.Get "menu-reset.js" | resources.Minify }}
