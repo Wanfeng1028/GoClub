@@ -1564,55 +1564,30 @@ mark.goclub-search-hit.is-current { outline: 2px solid var(--vp-brand-1); }
 .book-copyright { margin-top: 20px; color: var(--vp-text-3); font-size: 12.5px; }
 
 /* ============ 12. 贡献者 ============ */
-.contributors-section { margin-top: 44px; }
-.contributors-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-.contributors-heading h2 {
-  margin: 0;
-  padding-top: 0;
-  border-top: none;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-.contributors-heading span { font-size: 13px; color: var(--vp-text-3); }
-.contributors-list { list-style: none; margin: 0; padding: 0; }
-.contributor-row {
-  display: flex;
-  gap: 16px;
-  padding: 16px 4px;
-  border-bottom: 1px solid var(--vp-divider);
-}
-.contributor-avatar-link { position: relative; flex: 0 0 auto; width: 44px; height: 44px; }
-.contributor-avatar,
-.contributor-avatar-fallback {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-}
-.contributor-avatar { position: absolute; inset: 0; object-fit: cover; }
-.contributor-avatar-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--vp-bg-soft-hover);
-  color: var(--vp-text-2);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-.contributor-body { min-width: 0; }
-.contributor-name { margin: 0; font-size: 15px; font-weight: 600; }
-.contributor-name a { color: var(--vp-text-1); }
-.contributor-role, .contributor-fullname, .contributor-meta {
-  margin: 2px 0 0;
-  font-size: 13px;
-  color: var(--vp-text-2);
-}
-.contributor-meta a { color: var(--vp-brand-1); }
-
+/* 上游 people/person 网格按本站 --vp-* 变量转写（本站主题无上游 --bg/--line/--accent/--font-mono，值与上游亮暗色一致：--vp-divider/--vp-brand-1/--vp-text-1/2/3/--vp-bg/--vp-bg-soft/--vp-pre-bg/--vp-brand-soft/--gc-border-strong；等宽栈取本站 preflight 的 ui-monospace 栈）。 */
+.people-note { margin-top: 18px; padding: 16px 18px; border: 1px solid var(--vp-divider); border-left: 3px solid var(--vp-brand-1); border-radius: 6px; background: var(--vp-bg-soft); }
+.people-note h2 { margin: 0 0 6px; font-size: 15px; font-weight: 600; letter-spacing: 0; }
+.people-note p { margin: 0; color: var(--vp-text-2); font-size: 14px; line-height: 1.75; }
+.people { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); grid-auto-rows: 1fr; gap: 10px; margin-top: 14px; }
+@media (max-width: 1180px) { .people { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .people { grid-template-columns: minmax(0, 1fr); } }
+.person { display: flex; align-items: center; gap: 12px; min-height: 84px; padding: 14px 16px; border: 1px solid var(--vp-divider); border-radius: 10px; background: var(--vp-bg); transition: border-color .14s; }
+.person:hover { border-color: var(--gc-border-strong); }
+.person-avatar { position: relative; display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--vp-pre-bg); overflow: hidden; }
+.person-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.person-initial { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; font-size: 13px; color: var(--vp-text-3); }
+.person-main { display: flex; flex-direction: column; gap: 2px; flex: auto; min-width: 0; }
+.person-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.person-name { color: var(--vp-text-1); font-size: 14.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person-name:hover { color: var(--vp-brand-1); }
+.person-badge { flex: none; padding: 1px 7px; border-radius: 99px; background: var(--vp-brand-soft); color: var(--vp-brand-1); font-size: 10px; font-weight: 600; line-height: 1.7; white-space: nowrap; }
+.person-gh { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; margin-top: 5px; color: var(--vp-text-3); font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; font-size: 12.5px; }
+.person-gh svg { width: 13px; height: 12px; flex: none; }
+.person-gh:hover { color: var(--vp-brand-1); text-decoration: underline; text-underline-offset: 3px; }
+.person-pr { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex: none; white-space: nowrap; }
+.person-pr em { font-style: normal; color: var(--vp-text-3); font-size: 11px; white-space: nowrap; }
+.person-pr b { color: var(--vp-text-2); font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.markdown .people-note h2 { margin: 0 0 6px; padding-top: 0; border-top: none; font-size: 15px; }
 /* ============ 13. 内容页内嵌组件（书籍 / 岗位表 / 问答 / 聊天） ============ */
 .qa-answer {
   margin: 12px 0;
