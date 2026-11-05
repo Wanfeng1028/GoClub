@@ -1,5 +1,5 @@
 {{- /* Umami 访问统计核心：CSS + JS，负责填充页面上所有 [data-umami-stat] 占位。
-     展示位：侧边栏（_partials/docs/menu.html）、移动端顶栏（partials/docs/header.html）
+     展示位：侧边栏（_partials/docs/menu.html）、首页底栏（layouts/index.html，statusbar）
      指标：active 在线；t_* 今日；无前缀为累计 */ -}}
 <style>
 .goclub-umami-stats {
@@ -12,11 +12,6 @@
 }
 .goclub-umami-stats .goclub-umami-sep {
   opacity: 0.4;
-}
-.goclub-umami-row-label {
-  font-weight: 600;
-  opacity: 0.75;
-  margin-right: 2px;
 }
 .goclub-umami-online-dot {
   display: inline-block;
@@ -33,19 +28,21 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
 }
-.goclub-umami-grid {
-  display: grid;
-  grid-template-columns: auto repeat(3, auto minmax(2.2em, auto));
-  column-gap: 6px;
-  row-gap: 3px;
+/* 侧边栏竖排：每行“标签 + 数值”左右两端对齐，窄侧边栏/平板不截断。 */
+.goclub-umami-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.goclub-umami-row {
+  display: flex;
   align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
   white-space: nowrap;
 }
-.goclub-umami-grid b {
+.goclub-umami-row b {
   text-align: right;
-}
-.goclub-umami-metric {
-  opacity: 0.85;
 }
 /* hidden 必须真正隐藏统计块：--sidebar 的 display:flex 会覆盖 hidden 属性默认的 display:none。 */
 .goclub-umami-stats[hidden] {

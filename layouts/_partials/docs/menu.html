@@ -14,19 +14,17 @@
     {{ partial "docs/inject/menu-after" . }}
   </div>
 
-  {{/* 站点统计（Umami）：在线人数 + 访问/访客/浏览（今日/累计）。数据由 inject/body 的 goclub/umami-stats partial 填充；拉取失败时保持隐藏。 */}}
+  {{/* 站点统计（Umami）：在线人数 + 访问/访客/浏览（今日/累计）。竖排单列（窄侧边栏/平板不截断）；数据由 inject/body 的 goclub/umami-stats partial 填充；拉取失败时保持隐藏。 */}}
   <div class="goclub-umami-stats goclub-umami-stats--sidebar" hidden>
     <div class="goclub-umami-label">站点统计</div>
     <div class="goclub-umami-online"><span class="goclub-umami-online-dot" aria-hidden="true"></span>在线 <b data-umami-stat="active">–</b></div>
-    <div class="goclub-umami-grid">
-      <span class="goclub-umami-row-label">今日</span>
-      <span class="goclub-umami-metric">访问</span><b data-umami-stat="t_visits">–</b>
-      <span class="goclub-umami-metric">访客</span><b data-umami-stat="t_visitors">–</b>
-      <span class="goclub-umami-metric">浏览</span><b data-umami-stat="t_pageviews">–</b>
-      <span class="goclub-umami-row-label">累计</span>
-      <span class="goclub-umami-metric">访问</span><b data-umami-stat="visits">–</b>
-      <span class="goclub-umami-metric">访客</span><b data-umami-stat="visitors">–</b>
-      <span class="goclub-umami-metric">浏览</span><b data-umami-stat="pageviews">–</b>
+    <div class="goclub-umami-rows">
+      <span class="goclub-umami-row"><span>今日访问</span><b data-umami-stat="t_visits">–</b></span>
+      <span class="goclub-umami-row"><span>今日访客</span><b data-umami-stat="t_visitors">–</b></span>
+      <span class="goclub-umami-row"><span>今日浏览</span><b data-umami-stat="t_pageviews">–</b></span>
+      <span class="goclub-umami-row"><span>累计访问</span><b data-umami-stat="visits">–</b></span>
+      <span class="goclub-umami-row"><span>累计访客</span><b data-umami-stat="visitors">–</b></span>
+      <span class="goclub-umami-row"><span>累计浏览</span><b data-umami-stat="pageviews">–</b></span>
     </div>
   </div>
 

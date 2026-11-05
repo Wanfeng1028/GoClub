@@ -52,6 +52,7 @@
   --gc-code-bg: var(--vp-code-bg);
   --gc-mark: var(--vp-mark-bg);
   --gc-topbar-h: 64px;
+  --gc-status-h: 40px;
   --gc-toc-w: 256px;
   --gc-article-w: 688px;
   --gc-wide-w: 1024px;
@@ -779,6 +780,129 @@ body.book-kind-section .book-page > .book-footer { max-width: var(--gc-wide-w); 
 body.book-kind-home .book-page { padding: 0 24px 64px; }
 @media screen and (min-width: 40rem) {
   body.book-kind-home .book-page { padding-inline: 48px; }
+}
+
+/* 首页底栏（statusbar，对齐上游 goclub.space）：左 © + 内容整理，中在线/今日/累计统计，右投稿流程/贡献者/GitHub。
+   三栏 grid（1fr auto 1fr）；窄屏逐级收：≤60rem 藏“内容由社区整理”并收紧间距；≤40rem 单列居中叠放，只留今日统计。 */
+.statusbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  min-height: var(--gc-status-h);
+  padding: 10px 20px;
+  border-top: 1px solid var(--gc-border);
+  background: var(--gc-surface);
+  color: var(--gc-text-3);
+  font-size: 11.5px;
+}
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.status-sep {
+  color: var(--gc-border-strong);
+}
+.status-live {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-self: center;
+  white-space: nowrap;
+}
+.status-live span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.status-live b {
+  color: var(--gc-text-2);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.status-live i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  animation: gc-pulse 2.4s ease-in-out infinite;
+}
+@keyframes gc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.status-live .live-group {
+  gap: 10px;
+  padding-left: 14px;
+  border-left: 1px solid var(--gc-border);
+}
+.status-live .live-group em {
+  font-style: normal;
+  color: var(--gc-text);
+  font-weight: 600;
+}
+.status-live .live-now {
+  gap: 6px;
+}
+.status-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  white-space: nowrap;
+}
+.status-right a {
+  color: var(--gc-text-3);
+}
+.status-right a:hover {
+  color: var(--gc-accent);
+}
+/* 首页：底栏取代主题默认 book-footer（内容重复），侧边栏统计改由底栏展示，避免首页两处同数。 */
+body.book-kind-home .book-footer {
+  display: none;
+}
+body.book-kind-home .goclub-umami-stats--sidebar {
+  display: none;
+}
+@media screen and (max-width: 60rem) {
+  .status-left span:last-child {
+    display: none;
+  }
+  .status-live {
+    gap: 10px;
+  }
+  .status-live .live-group {
+    gap: 8px;
+    padding-left: 10px;
+  }
+}
+@media screen and (max-width: 40rem) {
+  .statusbar {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 6px;
+    min-height: 0;
+    padding: 12px;
+  }
+  .status-live {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .status-live .live-group.is-total {
+    display: none;
+  }
+  .status-live .live-group {
+    gap: 8px;
+    padding-left: 8px;
+    margin-left: 8px;
+  }
 }
 @media screen and (min-width: 60rem) {
   body.book-kind-home .book-page { padding-inline: 64px; }
