@@ -1,29 +1,4 @@
-<div class="goclub-footer-meta">
-  <div class="goclub-footer-status">
-    {{ if and .GitInfo .Site.Params.BookLastChangeLink }}
-      {{- $date := partial "docs/date" (dict "Date" .Lastmod "Format" "2006-01-02") -}}
-      <a class="flex align-center" href="{{ partial "docs/links/commit" . }}" title='{{ partial "docs/text/i18n" "Last modified by" }} {{ .GitInfo.AuthorName }} | {{ $date }}' target="_blank" rel="noopener">
-        <img src="{{ partial "docs/icon" "calendar" }}" class="book-icon" alt="{{ partial "docs/text/i18n" "Calendar" }}" />
-        <span>{{ $date }}</span>
-      </a>
-    {{ else }}
-      <span>GoClub Pro 内容持续整理中</span>
-    {{ end }}
-  </div>
 
-  <div class="goclub-footer-action">
-    {{ if and .File .Site.Params.BookEditLink }}
-      <a class="flex align-center" href="{{ partial "docs/links/edit" . }}" target="_blank" rel="noopener edit">
-        <img src="{{ partial "docs/icon" "edit" }}" class="book-icon" alt="{{ partial "docs/text/i18n" "Edit" }}" />
-        <span>去 GitHub 编辑本页</span>
-      </a>
-    {{ else }}
-      <a class="flex align-center" href="https://github.com/Wanfeng1028/GoClub" target="_blank" rel="noopener noreferrer">
-        <span>去 GitHub 共建内容</span>
-      </a>
-    {{ end }}
-  </div>
-</div>
 
 {{ $bookSection := default "docs" .Site.Params.BookSection }}
 {{ if eq $bookSection "*" }}

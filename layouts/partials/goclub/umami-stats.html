@@ -1,73 +1,10 @@
 {{- /* Umami 访问统计核心：CSS + JS，负责填充页面上所有 [data-umami-stat] 占位。
-     展示位：侧边栏（_partials/docs/menu.html）、首页底栏（layouts/index.html，statusbar）
+     展示位：全站底栏（layouts/baseof.html，statusbar）——所有页面底部常驻
      指标：active 在线；t_* 今日；无前缀为累计 */ -}}
 <style>
+/* 数字等宽（填入时不跳动）；颜色/字重由底栏的 .status-live b 控制，避免两处规则冲突。 */
 .goclub-umami-stats {
-  color: var(--goclub-muted-text, #838383);
   font-variant-numeric: tabular-nums;
-}
-.goclub-umami-stats b {
-  font-weight: 600;
-  color: var(--body-font-color, inherit);
-}
-.goclub-umami-stats .goclub-umami-sep {
-  opacity: 0.4;
-}
-.goclub-umami-online-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--goclub-primary);
-  box-shadow: 0 0 0 3px rgba(var(--goclub-primary-rgb), 0.1);
-  margin-right: 4px;
-  vertical-align: 1px;
-  animation: goclub-umami-pulse 2s ease-in-out infinite;
-}
-@keyframes goclub-umami-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
-/* 侧边栏竖排：每行“标签 + 数值”左右两端对齐，窄侧边栏/平板不截断。 */
-.goclub-umami-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.goclub-umami-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  white-space: nowrap;
-}
-.goclub-umami-row b {
-  text-align: right;
-}
-/* hidden 必须真正隐藏统计块：--sidebar 的 display:flex 会覆盖 hidden 属性默认的 display:none。 */
-.goclub-umami-stats[hidden] {
-  display: none;
-}
-/* 侧边栏：目录下方的紧凑站点状态。 */
-.goclub-umami-stats--sidebar {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  font-size: 0.72rem;
-  line-height: 1.4;
-  margin: 1rem 0.15rem 0;
-  padding-top: 1rem;
-  border-top: 1px solid var(--goclub-border, rgba(127, 127, 127, 0.2));
-}
-.goclub-umami-label {
-  color: var(--goclub-subtle-text, #777);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-}
-.goclub-umami-online {
-  align-self: flex-start;
 }
 </style>
 <script>
@@ -154,7 +91,7 @@
       render(data);
     })
     .catch(function () {
-      /* 拉取失败时保持隐藏，不影响页面 */
+      /* 拉取失败时数字保持“–”，底栏常驻，不影响页面 */
     });
 })();
 </script>

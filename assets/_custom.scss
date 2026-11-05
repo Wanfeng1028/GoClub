@@ -782,9 +782,21 @@ body.book-kind-home .book-page { padding: 0 24px 64px; }
   body.book-kind-home .book-page { padding-inline: 48px; }
 }
 
-/* 首页底栏（statusbar，对齐上游 goclub.space）：左 © + 内容整理，中在线/今日/累计统计，右投稿流程/贡献者/GitHub。
+/* 全站底栏（statusbar，对齐上游 goclub.space）：左 © + 内容整理，中在线/今日/累计统计，右投稿流程/贡献者/GitHub。
+   上游是全站底栏：不管切到哪个页面都在底部常驻，随页面滚动仍可见。我们 fork 用 position: fixed 实现（baseof 的页面结构是横向 flex，无法像上游那样用纵向 flex 顶住）。
    三栏 grid（1fr auto 1fr）；窄屏逐级收：≤60rem 藏“内容由社区整理”并收紧间距；≤40rem 单列居中叠放，只留今日统计。 */
+/* 固定底栏不遮内容：页面、侧边栏、右侧目录底部都留出底栏高度。 */
+body,
+.book-menu-content,
+.book-toc-content {
+  padding-bottom: var(--gc-status-h);
+}
 .statusbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -862,11 +874,8 @@ body.book-kind-home .book-page { padding: 0 24px 64px; }
 .status-right a:hover {
   color: var(--gc-accent);
 }
-/* 首页：底栏取代主题默认 book-footer（内容重复），侧边栏统计改由底栏展示，避免首页两处同数。 */
+/* 首页：主题默认 book-footer 在首页隐藏（首页的 book-footer 只剩上一篇/下一篇——首页没有上一篇/下一篇，内容为空；全站底栏已有统计与链接）。 */
 body.book-kind-home .book-footer {
-  display: none;
-}
-body.book-kind-home .goclub-umami-stats--sidebar {
   display: none;
 }
 @media screen and (max-width: 60rem) {
@@ -888,6 +897,10 @@ body.book-kind-home .goclub-umami-stats--sidebar {
     gap: 6px;
     min-height: 0;
     padding: 12px;
+  }
+  /* 移动端底栏叠成三行（约 90px），页面底部多留空间，防遮挡。 */
+  body {
+    padding-bottom: 110px;
   }
   .status-live {
     width: 100%;

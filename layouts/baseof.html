@@ -34,6 +34,22 @@
     {{ template "toc-container" . }}
   </main>
 
+  {{/* 全站底栏（statusbar，对齐上游 goclub.space）：所有页面底部常驻（position: fixed），左 © + 内容整理，中在线/今日/累计统计，右投稿流程/贡献者/GitHub。
+       我们站品牌用 GoClub Pro、GitHub 指我们 fork；不带 hidden（底栏常驻，数字填入前先显示“–”，避免布局跳动）。 */}}
+  <footer class="statusbar goclub-umami-stats">
+    <div class="status-left"><span>© 2026 GoClub Pro</span><span class="status-sep" aria-hidden="true">/</span><span>内容由社区整理</span></div>
+    <div class="status-live" aria-label="站点访问统计">
+      <span class="live-now"><i aria-hidden="true"></i>在线 <b data-umami-stat="active">–</b> 人</span>
+      <span class="live-group"><em>今日</em><span>浏览 <b data-umami-stat="t_pageviews">–</b></span><span>访客 <b data-umami-stat="t_visitors">–</b></span><span>访问 <b data-umami-stat="t_visits">–</b></span></span>
+      <span class="live-group is-total"><em>累计</em><span>浏览 <b data-umami-stat="pageviews">–</b></span><span>访客 <b data-umami-stat="visitors">–</b></span><span>访问 <b data-umami-stat="visits">–</b></span></span>
+    </div>
+    <div class="status-right">
+      {{ with .Site.GetPage "/docs/blog/提交流程.md" }}<a href="{{ .RelPermalink }}">投稿流程</a>{{ end }}
+      <a href="/docs/contributors/">贡献者</a>
+      <a href="https://github.com/Wanfeng1028/GoClub" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </footer>
+
   {{ partial "docs/inject/body" . }}
 </body>
 </html>
