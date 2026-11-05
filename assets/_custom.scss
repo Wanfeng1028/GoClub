@@ -889,6 +889,11 @@ body.book-kind-home .book-footer {
     gap: 8px;
     padding-left: 10px;
   }
+  /* 平板竖屏（768px 左右）中间统计太宽会把右侧 3 个链接挤出屏外（GitHub 先被裁掉）。
+     此处先藏“累计”一组（与手机端同款处理），只留在线 + 今日，右侧链接才放得下。 */
+  .status-live .live-group.is-total {
+    display: none;
+  }
 }
 @media screen and (max-width: 40rem) {
   /* 手机端底栏改单行极简：只留“在线 + 今日浏览”一行，© 与投稿/贡献者/GitHub 隐藏（顶栏与首页已有），不再三行叠放占屏。 */
