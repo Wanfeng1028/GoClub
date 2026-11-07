@@ -19,7 +19,7 @@
     {{/* 顶栏菜单行（VPNavMenu 形态）：四个主栏目直链 + 「更多」下拉（其余栏目），当前栏目品牌色高亮 */}}
     {{ $cur := . }}
     <nav class="goclub-topbar-nav" aria-label="主栏目">
-      {{ range slice "docs/interview" "docs/baguwen" "docs/resources" "docs/project-study" }}
+      {{ range slice "docs/interview" "docs/baguwen" "docs/websites" "docs/resources" "docs/project-study" }}
         {{ with $cur.Site.GetPage . }}
           <a href="{{ .RelPermalink }}"{{ if strings.HasPrefix $cur.RelPermalink .RelPermalink }} class="active" aria-current="true"{{ end }}>{{ .Title }}</a>
         {{ end }}

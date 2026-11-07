@@ -27,6 +27,10 @@ name: 同步上游更新
 #   layouts/、assets/、static/、themes/、hugo.toml、scripts/、
 #   .github/ 以及其他一切文件。特别说明：上游 2026-11-04 的应用式
 #   单屏布局重构（6d69b1e，PR #95）属于前端，有意不跟。
+#   唯一例外：首页卡片（layouts/index.html）与顶栏
+#   （layouts/partials/goclub/topbar.html）的硬编码栏目列表由
+#   “栏目漂移检查”在本地维护（只增补 slice 行里的栏目名，不从
+#   上游复制前端文件），见 2026-11-08 网站推荐教训。
 #
 # 其他行为与旧版一致：每天 UTC 22:17（北京时间次日 06:17）跑一次，
 # 也可手动触发；绝不 force push；失败时在本仓开 issue 报警且不推送，
@@ -108,22 +112,43 @@ jobs:
             echo "$gap"
           fi
 
-          if [[ ${#apply_files[@]} -eq 0 ]]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "上游新提交均不在内容路径（content、data/jobs、贡献者数据）内，本次不同步、不推送。"
-            exit 0
+          if [[ ${#apply_files[@]} -gt 0 ]]; then
+            git checkout upstream/main -- "${apply_files[@]}"
           fi
 
-          git checkout upstream/main -- "${apply_files[@]}"
+          # 首页/顶栏栏目漂移检查（2026-11-08 网站推荐教训）：内容同步了，
+          # 首页卡片与顶栏的硬编码栏目列表不会自动跟进——2026-11-07 上游
+          # 新增网站推荐栏目，内容到了、首页和顶栏却没有，漏到用户发现。
+          # 缺失的栏目按上游 section-links 顺序自动补进两个列表。
+          if git show upstream/main:layouts/partials/goclub/section-links.html > /tmp/goclub-upstream-section-links.html 2>/dev/null; then
+            grep -o '"/docs/[^"]*"' /tmp/goclub-upstream-section-links.html | tr -d '"' | sed 's#^/##' > /tmp/goclub-upstream-order.txt
+          else
+            : > /tmp/goclub-upstream-order.txt
+          fi
+          python3 scripts/drift-check.py /tmp/goclub-upstream-order.txt || { echo "栏目漂移检查失败，停止同步。" >&2; git reset -q; exit 1; }
+          git add layouts/index.html layouts/partials/goclub/topbar.html
 
-          # 防守：暂存区只允许内容路径，任何白名单外文件出现即失败、不推送
+          # 防守：暂存区只允许内容路径 + 漂移检查改的两个布局文件，任何
+          # 白名单外文件出现即失败、不推送；布局文件只允许 slice 行改动。
           staged="$(git -c core.quotepath=false diff --cached --name-only)"
-          unexpected="$(printf '%s\n' "$staged" | grep -Ev '^(content/|data/jobs/|data/contributors\.json$|data/maintainers\.json$)' || true)"
+          unexpected="$(printf '%s\n' "$staged" | grep -Ev '^(content/|data/jobs/|data/contributors\.json$|data/maintainers\.json$|layouts/index\.html$|layouts/partials/goclub/topbar\.html$)' || true)"
           if [[ -n "$unexpected" ]]; then
             echo "同步产生了白名单外改动，拒绝提交：" >&2
             echo "$unexpected" >&2
             exit 1
           fi
+          for f in layouts/index.html layouts/partials/goclub/topbar.html; do
+            if git diff --cached --quiet -- "$f"; then continue; fi
+            n_add="$(git diff --cached -- "$f" | grep '^+' | grep -vc '^+++')"
+            n_del="$(git diff --cached -- "$f" | grep '^-' | grep -vc '^---')"
+            add_ok="$(git diff --cached -- "$f" | grep '^+' | grep -v '^+++' | grep -c 'range slice')"
+            del_ok="$(git diff --cached -- "$f" | grep '^-' | grep -v '^---' | grep -c 'range slice')"
+            if [[ "$n_add" != 1 || "$n_del" != 1 || "$add_ok" != 1 || "$del_ok" != 1 ]]; then
+              echo "布局文件 $f 的改动不是单纯的 slice 行栏目增补，拒绝提交：" >&2
+              git diff --cached -- "$f" >&2
+              exit 1
+            fi
+          done
 
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"

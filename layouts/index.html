@@ -4,7 +4,7 @@
   {{ $startPage := .Site.GetPage "docs/baguwen" }}
   {{ $docs := .Site.GetPage "docs" }}
   {{ $sections := slice }}
-  {{ range slice "docs/interview" "docs/baguwen" "docs/resources" "docs/companion" "docs/project-study" "docs/blog" "docs/jobs" "docs/contributors" }}
+  {{ range slice "docs/interview" "docs/baguwen" "docs/websites" "docs/resources" "docs/companion" "docs/project-study" "docs/blog" "docs/jobs" "docs/contributors" }}
     {{ with $.Site.GetPage . }}{{ $sections = $sections | append . }}{{ end }}
   {{ end }}
   {{ $total := len .Site.RegularPages }}
