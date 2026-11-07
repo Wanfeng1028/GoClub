@@ -7,8 +7,8 @@
 # 同步铁律（用户 2026-11-07 亲定）：Pro 站只做增量——
 #   上游更新的内容跟进更新，上游新增的栏目跟着增加；
 #   上游删了什么我们不删，只加不减。
-# 因此本脚本只应用上游的新增/修改（diff-filter=AMT），对上游删除的
-# 文件只打印、不删除。
+# 因此本脚本只应用上游的新增/修改/重命名（diff-filter=AMRT），对上游删除的
+# 文件只打印、不删除。重命名按“新路径当新增、旧路径保留”处理。
 #
 # 同步范围（白名单）：content/、data/jobs/、data/contributors.json、
 # data/maintainers.json。前端（layouts/、assets/、static/、themes/、
@@ -45,7 +45,7 @@ echo "上游有新提交："
 git log --oneline HEAD..upstream/main | head -20
 
 base="$(git merge-base HEAD upstream/main)"
-mapfile -d '' -t apply_files < <(git -c core.quotepath=false diff -z --name-only --diff-filter=AMT "$base" upstream/main -- content data/jobs data/contributors.json data/maintainers.json)
+mapfile -d '' -t apply_files < <(git -c core.quotepath=false diff -z --name-only --diff-filter=AMRT "$base" upstream/main -- content data/jobs data/contributors.json data/maintainers.json)
 
 # 只加不减：上游删除的文件只记录、不删除，本站保留。
 mapfile -d '' -t kept_files < <(git -c core.quotepath=false diff -z --name-only --diff-filter=D "$base" upstream/main -- content data/jobs data/contributors.json data/maintainers.json)
@@ -54,9 +54,9 @@ if [[ ${#kept_files[@]} -gt 0 ]]; then
   printf '  保留：%s\n' "${kept_files[@]}"
 fi
 
-# 白名单缺口扫描：上游在 content/ 或 data/ 下的新增/修改中，
+# 白名单缺口扫描：上游在 content/ 或 data/ 下的新增/修改/重命名中，
 # 不在白名单内的列出来告警（不失败），提醒人工决定是否扩白名单。
-mapfile -d '' -t all_changed < <(git -c core.quotepath=false diff -z --name-only --diff-filter=AMT "$base" upstream/main -- content data)
+mapfile -d '' -t all_changed < <(git -c core.quotepath=false diff -z --name-only --diff-filter=AMRT "$base" upstream/main -- content data)
 gap="$(printf '%s\n' "${all_changed[@]}" | grep -Ev '^(content/|data/jobs/|data/contributors\.json$|data/maintainers\.json$)' || true)"
 if [[ -n "$gap" ]]; then
   echo "白名单缺口告警：上游下列内容路径文件不在同步白名单内，本次未同步，请人工确认是否扩白名单："
